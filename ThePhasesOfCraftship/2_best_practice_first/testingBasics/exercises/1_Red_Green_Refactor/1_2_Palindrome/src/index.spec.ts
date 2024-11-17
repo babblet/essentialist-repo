@@ -6,12 +6,12 @@ describe("PalindromeChecker", () => {
       [true, "mom"],
       [true, "Mom"],
       [true, "MoM"],
+      [false, "Momx"],
+      [true, "xMomx"],
     ])("should return %p for input %p", (result, value) => {
       expect(PalindromeChecker.isItAPalindrome(value)).toBe(result);
     });
 
-    it.todo('should return false for input "Momx"');
-    it.todo('should return true for input "xMomx"');
     it.todo('should return true for input "Was It A Rat I Saw"');
     it.todo('should return true for input "Never Odd or Even"');
     it.todo('should return false for input "Never Odd or Even1"');

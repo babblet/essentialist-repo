@@ -1,5 +1,6 @@
 export class PalindromeChecker {
   public static isItAPalindrome(input: string): boolean {
-    return input.toLowerCase() === "mom";
+    const reverse = input.split("").reverse().join("");
+    return input.toLowerCase() === reverse.toLowerCase();
   }
 }
