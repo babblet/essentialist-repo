@@ -10,7 +10,10 @@ describe('PalindromeChecker', () => {
       expect(PalindromeChecker.isItAPalindrome('Mom')).toBe(true)
     })
 
-    it.todo('should return true for input "MoM"')
+    it('should return true for input "MoM"', () => {
+      expect(PalindromeChecker.isItAPalindrome('MoM')).toBe(true)
+    })
+
     it.todo('should return false for input "Momx"')
     it.todo('should return true for input "xMomx"')
     it.todo('should return true for input "Was It A Rat I Saw"')
