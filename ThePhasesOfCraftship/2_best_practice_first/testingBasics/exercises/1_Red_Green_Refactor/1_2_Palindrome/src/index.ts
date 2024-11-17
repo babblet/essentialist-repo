@@ -8,9 +8,9 @@ export class PalindromeChecker {
   }
 
   public static isItAPalindrome(input: string): boolean {
-    return (
-      this.removeWhitespace(input.toLowerCase()) ===
-      this.removeWhitespace(this.reverse(input).toLowerCase())
-    );
+    const formatedInput = this.removeWhitespace(input.toLowerCase());
+    const reversedInput = this.reverse(formatedInput);
+
+    return formatedInput === reversedInput;
   }
 }
