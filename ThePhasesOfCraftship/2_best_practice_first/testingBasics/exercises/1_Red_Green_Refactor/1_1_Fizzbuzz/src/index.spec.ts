@@ -5,35 +5,23 @@ describe("fizzbuzz", () => {
     expect(typeof fizzbuzz(1)).toBe("string");
   });
 
-  it("should return 'Fizz' for multiples of 3", () => {
-    expect(fizzbuzz(3)).toBe("Fizz");
-    expect(fizzbuzz(9)).toBe("Fizz");
-    expect(fizzbuzz(42)).toBe("Fizz");
+  it.each([3,9,42])("should return 'Fizz' for multiples of 3", (n) => {
+    expect(fizzbuzz(n)).toBe("Fizz");
   });
 
-  it("should return 'Buzz' for multiples of 5", () => {
-    expect(fizzbuzz(5)).toBe("Buzz");
+  it.each([5,25])("should return 'Buzz' for multiples of 5", (n) => {
+    expect(fizzbuzz(n)).toBe("Buzz");
   });
 
-  it("should return n as a string for numbers that are not multiples of 3 or 5", () => {
-    expect(fizzbuzz(1)).toBe("1");
-    expect(fizzbuzz(43)).toBe("43");
-
+  it.each([1,43])("should return n as a string for numbers that are not multiples of 3 or 5", (n) => {
+    expect(fizzbuzz(n)).toBe(n.toString());
   });
 
-  it("should return 'FizzBuzz' for multiples of 3 and 5", () => {
-    expect(fizzbuzz(15)).toBe("FizzBuzz");
-    expect(fizzbuzz(45)).toBe("FizzBuzz");
+  it.each([15,45])("should return 'FizzBuzz' for multiples of 3 and 5", (n) => {
+    expect(fizzbuzz(n)).toBe("FizzBuzz");
   });
 
-  it("should only allow numbers from 1-100 as input", () => {
-    expect(() => fizzbuzz(-12)).toThrow();
-    expect(() => fizzbuzz(0)).toThrow();
-    expect(() => fizzbuzz(101)).toThrow();
-    expect(() => fizzbuzz(102)).toThrow();
-
-    expect(() => fizzbuzz("" as unknown as number)).toThrow();
-
-    expect(() => fizzbuzz(50)).not.toThrow();
+  it.each([-12, 0, 101, 102, "" as unknown as number])("should not allow numbers outside of 1-100 as input", (n) => {
+    expect(() => fizzbuzz(n)).toThrow();
   });
 });
