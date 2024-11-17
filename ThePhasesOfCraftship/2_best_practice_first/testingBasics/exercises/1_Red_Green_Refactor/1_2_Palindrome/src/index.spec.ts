@@ -8,6 +8,7 @@ describe("PalindromeChecker", () => {
       [true, "MoM"],
       [false, "Momx"],
       [true, "xMomx"],
+      [true, "Was It A Rat I Saw"],
     ])("should return %p for input %p", (result, value) => {
       expect(PalindromeChecker.isItAPalindrome(value)).toBe(result);
     });
