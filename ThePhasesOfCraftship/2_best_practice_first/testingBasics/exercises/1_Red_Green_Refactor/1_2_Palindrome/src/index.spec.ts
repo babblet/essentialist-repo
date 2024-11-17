@@ -1,24 +1,20 @@
-import { PalindromeChecker } from '.'
+import { PalindromeChecker } from ".";
 
-describe('PalindromeChecker', () => {
-  describe('isItAPalindrome', () => {
-    it('should return true for input "mom"', () => {
-      expect(PalindromeChecker.isItAPalindrome('mom')).toBe(true)
-    })
+describe("PalindromeChecker", () => {
+  describe("isItAPalindrome", () => {
+    it.each([
+      [true, "mom"],
+      [true, "Mom"],
+      [true, "MoM"],
+    ])("should return %p for input %p", (result, value) => {
+      expect(PalindromeChecker.isItAPalindrome(value)).toBe(result);
+    });
 
-    it('should return true for input "Mom"', () => {
-      expect(PalindromeChecker.isItAPalindrome('Mom')).toBe(true)
-    })
-
-    it('should return true for input "MoM"', () => {
-      expect(PalindromeChecker.isItAPalindrome('MoM')).toBe(true)
-    })
-
-    it.todo('should return false for input "Momx"')
-    it.todo('should return true for input "xMomx"')
-    it.todo('should return true for input "Was It A Rat I Saw"')
-    it.todo('should return true for input "Never Odd or Even"')
-    it.todo('should return false for input "Never Odd or Even1"')
-    it.todo('should return true for input "1Never Odd or Even1"')
-  })
-})
+    it.todo('should return false for input "Momx"');
+    it.todo('should return true for input "xMomx"');
+    it.todo('should return true for input "Was It A Rat I Saw"');
+    it.todo('should return true for input "Never Odd or Even"');
+    it.todo('should return false for input "Never Odd or Even1"');
+    it.todo('should return true for input "1Never Odd or Even1"');
+  });
+});
