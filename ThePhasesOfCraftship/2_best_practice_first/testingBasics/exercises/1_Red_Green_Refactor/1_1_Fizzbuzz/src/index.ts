@@ -7,5 +7,5 @@ export const fizzbuzz = (n: number): string => {
     return "Buzz";
   }
 
-  return "a string";
+  return n.toString();
 };
