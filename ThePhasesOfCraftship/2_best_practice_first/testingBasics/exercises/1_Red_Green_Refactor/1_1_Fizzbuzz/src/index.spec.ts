@@ -1,3 +1,4 @@
+import { fizzbuzz } from ".";
 
 describe("fizzbuzz", () => {
   it("should return a string", () => {
