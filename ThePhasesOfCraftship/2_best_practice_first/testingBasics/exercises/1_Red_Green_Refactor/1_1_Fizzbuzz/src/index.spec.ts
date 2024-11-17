@@ -16,4 +16,8 @@ describe("fizzbuzz", () => {
   it("should return n as a string for numbers that are not multiples of 3 or 5", () => {
     expect(fizzbuzz(1)).toBe("1");
   });
+
+  it ("should return 'FizzBuzz' for multiples of 3 and 5", () => {
+    expect(fizzbuzz(15)).toBe("FizzBuzz");
+  });
 });
