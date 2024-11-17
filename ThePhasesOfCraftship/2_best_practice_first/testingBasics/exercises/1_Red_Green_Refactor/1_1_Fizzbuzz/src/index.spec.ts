@@ -17,7 +17,13 @@ describe("fizzbuzz", () => {
     expect(fizzbuzz(1)).toBe("1");
   });
 
-  it ("should return 'FizzBuzz' for multiples of 3 and 5", () => {
+  it("should return 'FizzBuzz' for multiples of 3 and 5", () => {
     expect(fizzbuzz(15)).toBe("FizzBuzz");
+  });
+
+  it("should only allow numbers from 1-100 as input", () => {
+    expect(() => fizzbuzz(0)).toThrow();
+    expect(() => fizzbuzz(101)).toThrow();
+    expect(() => fizzbuzz(50)).not.toThrow();
   });
 });
