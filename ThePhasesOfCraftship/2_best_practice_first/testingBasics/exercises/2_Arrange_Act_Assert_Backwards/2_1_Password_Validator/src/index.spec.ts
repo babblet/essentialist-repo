@@ -65,6 +65,70 @@ describe('Password Validator', () => {
         expect(result.errors).toContain(PasswordValidationError.Length);
         expect(result.errors).toContain(PasswordValidationError.Digit);
       })
+
+      it('knows that "AVeryLongPassword" has missing length and digit', () => {
+        const password = "AVeryLongPassword";
+        const result = PasswordValidator.validate(password);
+        expect(result.result).toBeFalsy();
+        expect(result.errors).toContain(PasswordValidationError.Length);
+        expect(result.errors).toContain(PasswordValidationError.Digit);
+      })
+    })
+
+    describe('Result for missing length and upper case letter', () => {
+      it('knows that "pa55" has missing length and upper case letter', () => {
+        const password = "pa55";
+        const result = PasswordValidator.validate(password);
+        expect(result.result).toBeFalsy();
+        expect(result.errors).toContain(PasswordValidationError.Length);
+        expect(result.errors).toContain(PasswordValidationError.UpperCase);
+      })
+
+      it('knows that "pa55pa55pa55pa55pa55" has missing length and upper case letter', () => {
+        const password = "pa55pa55pa55pa55pa55";
+        const result = PasswordValidator.validate(password);
+        expect(result.result).toBeFalsy();
+        expect(result.errors).toContain(PasswordValidationError.Length);
+        expect(result.errors).toContain(PasswordValidationError.UpperCase);
+      })
+    })
+
+    describe('Result for missing digit and upper case letter', () => {
+      it('knows that "testing" has missing digit and upper case letter', () => {
+        const password = "testing";
+        const result = PasswordValidator.validate(password);
+        expect(result.result).toBeFalsy();
+        expect(result.errors).toContain(PasswordValidationError.Digit);
+        expect(result.errors).toContain(PasswordValidationError.UpperCase);
+      })
+
+      it('knows that "testingtesting" has missing digit and upper case letter', () => {
+        const password = "testingtesting";
+        const result = PasswordValidator.validate(password);
+        expect(result.result).toBeFalsy();
+        expect(result.errors).toContain(PasswordValidationError.Digit);
+        expect(result.errors).toContain(PasswordValidationError.UpperCase);
+      })
+    })
+
+    describe('Result for missing all criterias', () => {
+      it('knows that "test" has missing all criterias', () => {
+        const password = "test";
+        const result = PasswordValidator.validate(password);
+        expect(result.result).toBeFalsy();
+        expect(result.errors).toContain(PasswordValidationError.Length);
+        expect(result.errors).toContain(PasswordValidationError.Digit);
+        expect(result.errors).toContain(PasswordValidationError.UpperCase);
+      })
+
+      it('knows that "testtesttest" has missing all criterias', () => {
+        const password = "testtesttesttest";
+        const result = PasswordValidator.validate(password);
+        expect(result.result).toBeFalsy();
+        expect(result.errors).toContain(PasswordValidationError.Length);
+        expect(result.errors).toContain(PasswordValidationError.Digit);
+        expect(result.errors).toContain(PasswordValidationError.UpperCase);
+      })
     })
   })
 })
