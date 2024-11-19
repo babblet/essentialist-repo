@@ -3,7 +3,7 @@ type PasswordValidationResult = {
   errors: PasswordValidationError[]
 }
 
-enum PasswordValidationError {
+export enum PasswordValidationError {
   Length = "Password must be between 5 and 15 characters long",
   Digit = "Password must contain at least one digit",
   UpperCase = "Password must contain at least one upper case letter"
@@ -29,6 +29,9 @@ enum PasswordValidationError {
  */
 export class PasswordValidator {
   static validate(password: string): PasswordValidationResult {
+    if (password.length < 5) {
+      return { result: false, errors: [PasswordValidationError.Length] };
+    }
     return { result: true, errors: [] };
   }
 }
