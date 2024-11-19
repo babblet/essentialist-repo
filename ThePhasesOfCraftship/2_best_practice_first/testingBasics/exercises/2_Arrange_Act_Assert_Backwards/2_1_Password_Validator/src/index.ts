@@ -36,7 +36,11 @@ export class PasswordValidator {
     if (password.search(/\d/) === -1) {
       return { result: false, errors: [PasswordValidationError.Digit] };
     }
-    
+
+    if (password.search(/[A-Z]/) === -1) {
+      return { result: false, errors: [PasswordValidationError.UpperCase] };
+    }
+
     return { result: true, errors: [] };
   }
 }

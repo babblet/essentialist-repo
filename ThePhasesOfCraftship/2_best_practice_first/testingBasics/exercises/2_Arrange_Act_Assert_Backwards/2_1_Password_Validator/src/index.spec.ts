@@ -39,6 +39,22 @@ describe('Password Validator', () => {
       expect(result.errors).toContain(PasswordValidationError.Digit);      
     })
   })
+
+  describe('Contains at least one upper case letter', () => {
+    it('knows that "someThing4u" is valid', () => {
+      const password = "someThing4u";
+      const result = PasswordValidator.validate(password);
+      expect(result.result).toBeTruthy();
+      expect(result.errors).toHaveLength(0);
+    })
+
+    it('knows that "password123" has missing upper case letter', () => {
+      const password = "password123";
+      const result = PasswordValidator.validate(password);
+      expect(result.result).toBeFalsy();
+      expect(result.errors).toContain(PasswordValidationError.UpperCase);      
+    })
+  })
 })
 
 
