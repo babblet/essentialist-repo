@@ -21,7 +21,23 @@ describe('Password Validator', () => {
       const result = PasswordValidator.validate(password);
       expect(result.result).toBeFalsy();
       expect(result.errors).toContain(PasswordValidationError.Length);      
-    });
+    })
+  })
+
+  describe('Contains at least one digit', () => {
+    it('knows that "Test4Pass" is valid', () => {
+      const password = "Test4Pass";
+      const result = PasswordValidator.validate(password);
+      expect(result.result).toBeTruthy();
+      expect(result.errors).toHaveLength(0);
+    })
+
+    it('knows that "TeStInG" has missing digit', () => {
+      const password = "TeStInG";
+      const result = PasswordValidator.validate(password);
+      expect(result.result).toBeFalsy();
+      expect(result.errors).toContain(PasswordValidationError.Digit);      
+    })
   })
 })
 

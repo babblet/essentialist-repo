@@ -32,6 +32,11 @@ export class PasswordValidator {
     if (password.length < 5 || password.length > 15) {
       return { result: false, errors: [PasswordValidationError.Length] };
     }
+
+    if (password.search(/\d/) === -1) {
+      return { result: false, errors: [PasswordValidationError.Digit] };
+    }
+    
     return { result: true, errors: [] };
   }
 }
