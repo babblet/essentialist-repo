@@ -28,18 +28,30 @@ export enum PasswordValidationError {
  * ```
  */
 export class PasswordValidator {
+  private static isInvalidLength(password: string): boolean {
+    return password.length < 5 || password.length > 15;
+  }
+
+  private static isMissingDigit(password: string): boolean {
+    return password.search(/\d/) === -1;
+  }
+
+  private static isMissingUpperCase(password: string): boolean {
+    return password.search(/[A-Z]/) === -1;
+  }
+
   static validate(password: string): PasswordValidationResult {
     let errors: PasswordValidationError[] = [];
 
-    if (password.length < 5 || password.length > 15) {
+    if (this.isInvalidLength(password)) {
       errors.push(PasswordValidationError.Length);
     }
 
-    if (password.search(/\d/) === -1) {
+    if (this.isMissingDigit(password)) {
       errors.push(PasswordValidationError.Digit);
     }
 
-    if (password.search(/[A-Z]/) === -1) {
+    if (this.isMissingUpperCase(password)) {
       errors.push(PasswordValidationError.UpperCase);
     }
 
