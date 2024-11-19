@@ -29,18 +29,20 @@ export enum PasswordValidationError {
  */
 export class PasswordValidator {
   static validate(password: string): PasswordValidationResult {
+    let errors: PasswordValidationError[] = [];
+
     if (password.length < 5 || password.length > 15) {
-      return { result: false, errors: [PasswordValidationError.Length] };
+      errors.push(PasswordValidationError.Length);
     }
 
     if (password.search(/\d/) === -1) {
-      return { result: false, errors: [PasswordValidationError.Digit] };
+      errors.push(PasswordValidationError.Digit);
     }
 
     if (password.search(/[A-Z]/) === -1) {
-      return { result: false, errors: [PasswordValidationError.UpperCase] };
+      errors.push(PasswordValidationError.UpperCase);
     }
 
-    return { result: true, errors: [] };
+    return { result: errors.length === 0, errors };
   }
 }

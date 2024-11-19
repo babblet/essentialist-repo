@@ -55,6 +55,18 @@ describe('Password Validator', () => {
       expect(result.errors).toContain(PasswordValidationError.UpperCase);      
     })
   })
+
+  describe("It can return multiple errors", () => {
+    describe('Result for missing length and digit criterias', () => {
+      it('knows that "Test" has missing length and digit', () => {
+        const password = "Test";
+        const result = PasswordValidator.validate(password);
+        expect(result.result).toBeFalsy();
+        expect(result.errors).toContain(PasswordValidationError.Length);
+        expect(result.errors).toContain(PasswordValidationError.Digit);
+      })
+    })
+  })
 })
 
 
