@@ -42,6 +42,10 @@ const invalidPasswordsWithErrors = [
       PasswordValidationError.UpperCase,
     ],
   },
+  // Grading tests
+  { password: "maxwell1_c", errors: [PasswordValidationError.UpperCase] },
+  { password: "maxwellTheBe", errors: [PasswordValidationError.Digit] },
+  { password: "thePhysical1234567", errors: [PasswordValidationError.Length] },
 ];
 
 describe("Password Validator", () => {
@@ -51,7 +55,9 @@ describe("Password Validator", () => {
     expect(result.errors).toHaveLength(0);
   });
 
-  it.each(invalidPasswordsWithErrors.map(({ password, errors }) => [password, errors ]))(
+  it.each(
+    invalidPasswordsWithErrors.map(({ password, errors }) => [password, errors])
+  )(
     "knows that '%s' is invalid with validation errors: %s",
     (password, errors) => {
       const result = PasswordValidator.validate(password);
