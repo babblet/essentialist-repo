@@ -29,7 +29,7 @@ export enum PasswordValidationError {
  */
 export class PasswordValidator {
   static validate(password: string): PasswordValidationResult {
-    if (password.length < 5) {
+    if (password.length < 5 || password.length > 15) {
       return { result: false, errors: [PasswordValidationError.Length] };
     }
     return { result: true, errors: [] };

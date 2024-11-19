@@ -15,6 +15,13 @@ describe('Password Validator', () => {
       expect(result.result).toBeFalsy();
       expect(result.errors).toContain(PasswordValidationError.Length);      
     })
+
+    it('knows that "ALongPassword12345" has invalid length', () => {
+      const password = "ALongPassword12345";
+      const result = PasswordValidator.validate(password);
+      expect(result.result).toBeFalsy();
+      expect(result.errors).toContain(PasswordValidationError.Length);      
+    });
   })
 })
 
