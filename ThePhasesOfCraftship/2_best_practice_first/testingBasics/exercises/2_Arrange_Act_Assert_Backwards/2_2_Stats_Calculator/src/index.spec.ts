@@ -18,5 +18,6 @@ describe('stats calculator', () => {
     expect(result.min).toBe(output.min);
     expect(result.max).toBe(output.max);
     expect(result.count).toBe(output.count);
+    expect(result.avg).toBe(output.avg);
   })
 })

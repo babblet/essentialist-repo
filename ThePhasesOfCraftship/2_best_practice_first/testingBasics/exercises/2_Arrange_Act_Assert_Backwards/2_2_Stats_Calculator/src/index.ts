@@ -27,12 +27,16 @@ export class StatsCalculator {
     return input.sort((a, b) => b - a)[0];
   }
 
+  private static getAverageValue(input: number[]): number {
+    return input.reduce((a, b) => a + b, 0) / input.length;
+  }
+
   public static calculate(input: number[]): StatsResult {
     return {
       min: this.getMinValue(input),
       max: this.getMaxValue(input),
       count: input.length,
-      avg: 0,
+      avg: this.getAverageValue(input),
     };
   }
 }
