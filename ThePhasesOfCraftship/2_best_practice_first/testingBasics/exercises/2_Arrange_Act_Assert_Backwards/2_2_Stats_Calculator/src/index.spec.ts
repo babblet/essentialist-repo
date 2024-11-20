@@ -18,7 +18,7 @@ describe('stats calculator', () => {
     expect(result.min).toBe(output.min);
   })
 
-  it.each(exampleData.slice(0,1))('should calculate the correct max value for %s', (input, output) => {
+  it.each(exampleData.slice(0,2))('should calculate the correct max value for %s', (input, output) => {
     const result = StatsCalculator.calculate(input);
     expect(result.max).toBe(output.max);
   })

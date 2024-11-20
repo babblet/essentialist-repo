@@ -1,9 +1,9 @@
 export type StatsResult = {
-  min: number,
-  max: number,
-  count: number,
-  avg: number
-}
+  min: number;
+  max: number;
+  count: number;
+  avg: number;
+};
 
 /**
  * A utility class for calculating stats from Integers.
@@ -23,7 +23,16 @@ export class StatsCalculator {
     return input.sort((a, b) => a - b)[0];
   }
 
+  private static getMaxValue(input: number[]): number {
+    return input.sort((a, b) => b - a)[0];
+  }
+
   public static calculate(input: number[]): StatsResult {
-    return { min: this.getMinValue(input), max: 5, count: 0, avg: 0 };
+    return {
+      min: this.getMinValue(input),
+      max: this.getMaxValue(input),
+      count: 0,
+      avg: 0,
+    };
   }
 }
