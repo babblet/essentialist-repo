@@ -5,7 +5,6 @@ type StatsResult = {
   avg: number
 }
 
-
 /**
  * A utility class for calculating stats from Integers.
  *
@@ -19,4 +18,8 @@ type StatsResult = {
  * console.log(result); // { min: 1, max: 5, count: 5, avg: 3 }
  * ```
  */
-class StatsCalculator {}
+export class StatsCalculator {
+  public static calculate(input: number[]): StatsResult {
+    return { min: 0, max: 0, count: 0, avg: 0 };
+  }
+}
