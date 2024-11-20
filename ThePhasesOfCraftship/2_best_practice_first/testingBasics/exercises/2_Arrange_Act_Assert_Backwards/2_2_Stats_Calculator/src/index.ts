@@ -19,7 +19,11 @@ type StatsResult = {
  * ```
  */
 export class StatsCalculator {
+  private static getMinValue(input: number[]): number {
+    return input.sort((a, b) => a - b)[0];
+  }
+
   public static calculate(input: number[]): StatsResult {
-    return { min: 0, max: 0, count: 0, avg: 0 };
+    return { min: this.getMinValue(input), max: 0, count: 0, avg: 0 };
   }
 }
