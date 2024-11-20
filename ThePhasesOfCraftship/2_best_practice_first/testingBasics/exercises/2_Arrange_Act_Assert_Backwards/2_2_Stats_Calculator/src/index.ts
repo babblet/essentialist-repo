@@ -31,7 +31,7 @@ export class StatsCalculator {
     return {
       min: this.getMinValue(input),
       max: this.getMaxValue(input),
-      count: 0,
+      count: input.length,
       avg: 0,
     };
   }
