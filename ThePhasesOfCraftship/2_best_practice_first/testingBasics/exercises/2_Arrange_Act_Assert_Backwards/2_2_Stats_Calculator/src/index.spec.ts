@@ -13,18 +13,10 @@ describe('stats calculator', () => {
     expect(result).toBeDefined();
   })
 
-  it.each(exampleData)('should calculate the correct min value for %s', (input, output) => {
+  it.each(exampleData)('knows that the result for %s is %o', (input, output) => {
     const result = StatsCalculator.calculate(input);
     expect(result.min).toBe(output.min);
-  })
-
-  it.each(exampleData)('should calculate the correct max value for %s', (input, output) => {
-    const result = StatsCalculator.calculate(input);
     expect(result.max).toBe(output.max);
-  })
-
-  it.each(exampleData)('should calculate the correct count value for %s', (input, output) => {
-    const result = StatsCalculator.calculate(input);
     expect(result.count).toBe(output.count);
   })
 })
