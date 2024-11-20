@@ -18,4 +18,10 @@ describe('stats calculator', () => {
     const result = StatsCalculator.calculate(input);
     expect(result.min).toBe(-5);
   })
+
+  it('should calculate the correct min value for [1,-2,3,-4,5]', () => {
+    const input = [1, -2, 3, -4, 5];
+    const result = StatsCalculator.calculate(input);
+    expect(result.min).toBe(-4);
+  })
 })
