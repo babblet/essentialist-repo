@@ -1,4 +1,4 @@
-type StatsResult = {
+export type StatsResult = {
   min: number,
   max: number,
   count: number,

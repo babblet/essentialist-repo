@@ -1,4 +1,10 @@
-import { StatsCalculator } from '.';
+import { StatsCalculator, StatsResult } from '.';
+
+const exampleData = [
+  { input: [1, 2, 3, 4, 5],      output: { min: 1, max: 5, count: 5, avg: 3 } },
+  { input: [-1, -2, -3, -4, -5], output: { min: -5, max: -1, count: 5, avg: -3 } },
+  { input: [1, -2, 3, -4, 5],    output: { min: -4, max: 5, count: 5, avg: 0.6 } }
+].map(({ input, output }): [number[], StatsResult] => [input, output]);
 
 describe('stats calculator', () => {
   it('should return an result', () => {
@@ -7,21 +13,8 @@ describe('stats calculator', () => {
     expect(result).toBeDefined();
   })
 
-  it('should calculate the correct min value for [1,2,3,4,5]', () => {
-    const input = [1, 2, 3, 4, 5];
+  it.each(exampleData)('should calculate the correct min value for %s', (input, output) => {
     const result = StatsCalculator.calculate(input);
-    expect(result.min).toBe(1);
-  })
-
-  it('should calculate the correct min value for [-1,-2,-3,-4,-5]', () => {
-    const input = [-1, -2, -3, -4, -5];
-    const result = StatsCalculator.calculate(input);
-    expect(result.min).toBe(-5);
-  })
-
-  it('should calculate the correct min value for [1,-2,3,-4,5]', () => {
-    const input = [1, -2, 3, -4, 5];
-    const result = StatsCalculator.calculate(input);
-    expect(result.min).toBe(-4);
+    expect(result.min).toBe(output.min);
   })
 })
