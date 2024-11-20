@@ -1,9 +1,10 @@
 import { StatsCalculator, StatsResult } from '.';
 
 const exampleData = [
-  { input: [1, 2, 3, 4, 5],      output: { min: 1, max: 5, count: 5, avg: 3 } },
-  { input: [-1, -2, -3, -4, -5], output: { min: -5, max: -1, count: 5, avg: -3 } },
-  { input: [1, -2, 3, -4, 5],    output: { min: -4, max: 5, count: 5, avg: 0.6 } }
+  { input: [1, 2, 3, 4, 5],        output: { min: 1, max: 5, count: 5, avg: 3 } },
+  { input: [-1, -2, -3, -4, -5],   output: { min: -5, max: -1, count: 5, avg: -3 } },
+  { input: [1, -2, 3, -4, 5],      output: { min: -4, max: 5, count: 5, avg: 0.6 } },
+  { input: [2, 4, 21, -8, 53, 40], output: { min: -8, max: 53, count: 6, avg: 18.666666666667 } }
 ].map(({ input, output }): [number[], StatsResult] => [input, output]);
 
 describe('stats calculator', () => {

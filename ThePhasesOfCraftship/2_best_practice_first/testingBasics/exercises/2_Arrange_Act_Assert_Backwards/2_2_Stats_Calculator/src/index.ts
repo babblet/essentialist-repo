@@ -28,7 +28,10 @@ export class StatsCalculator {
   }
 
   private static getAverageValue(input: number[]): number {
-    return input.reduce((a, b) => a + b, 0) / input.length;
+    const sum = input.reduce((a, b) => a + b, 0);
+    const avg = sum / input.length;
+    const fixedAvg = avg.toFixed(12);
+    return parseFloat(fixedAvg);
   }
 
   public static calculate(input: number[]): StatsResult {
