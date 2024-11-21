@@ -4,7 +4,10 @@ describe('military time validator', () => {
   it.each([
     '',
     '1:12 - 14:32',
-    '01:12 - 1:32'
+    '01:12 - 1:32',
+    '- 14:32',
+    '01:12 - ',
+    '00001',
   ])('knows that %s is an invalid military time', (militaryTime) => {
     expect(MilitartTimeValidator.validate(militaryTime)).toBe(false)
   })
