@@ -8,6 +8,7 @@ describe('military time validator', () => {
     '- 14:32',
     '01:12 - ',
     '00001',
+    '00001 - 00001'
   ])('knows that %s is an invalid military time', (militaryTime) => {
     expect(MilitartTimeValidator.validate(militaryTime)).toBe(false)
   })

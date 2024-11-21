@@ -14,9 +14,13 @@ export class MilitartTimeValidator {
 
     const [leftTime, rightTime] = militaryTime.split(' - ');
     if (!leftTime || !rightTime) return false;
-    if(leftTime.length !== 5 || rightTime.length !== 5) return false;
 
-    if (leftTime === '01:12' && rightTime === '14:32') return true;
+    if(leftTime.length !== 5 || rightTime.length !== 5) return false;
+    
+    const [leftHour, leftMinute] = leftTime.split(':').map(Number);
+    const [rightHour, rightMinute] = rightTime.split(':').map(Number);
+    if (!leftHour || !leftMinute || !rightHour || !rightMinute) return false;
+
     return true;
   }
 }
