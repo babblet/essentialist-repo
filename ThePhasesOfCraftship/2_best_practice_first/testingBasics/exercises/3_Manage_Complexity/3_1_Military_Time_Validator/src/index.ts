@@ -8,4 +8,8 @@
  * const isValid = MilitartTimeValidator.validate(militaryTime);
  * console.log(isValid); // true
  */
-class MilitartTimeValidator {}
+export class MilitartTimeValidator {
+  public static validate(militaryTime: string): boolean {
+    return false;
+  }
+}
