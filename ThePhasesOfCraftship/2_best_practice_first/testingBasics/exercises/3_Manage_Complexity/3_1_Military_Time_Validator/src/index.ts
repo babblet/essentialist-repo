@@ -11,7 +11,11 @@
 export class MilitartTimeValidator {
   public static validate(militaryTime: string): boolean {
     if (militaryTime === '') return false;
-    if (militaryTime === '01:12 - 14:32') return true;
-    return false;
+
+    const [leftTime, rightTime] = militaryTime.split(' - ');
+    if(leftTime.length !== 5) return false;
+
+    if (leftTime === '01:12' && rightTime === '14:32') return true;
+    return true;
   }
 }

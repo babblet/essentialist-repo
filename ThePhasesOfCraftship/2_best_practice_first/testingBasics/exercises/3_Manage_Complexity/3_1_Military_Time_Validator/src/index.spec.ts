@@ -10,4 +10,9 @@ describe('military time validator', () => {
     const militaryTime = '01:12 - 14:32';
     expect(MilitartTimeValidator.validate(militaryTime)).toBe(true)
   })
+
+  it('knows that "1:12 - 14:32" is an invalid military time', () => {
+    const militaryTime = '1:12 - 14:32';
+    expect(MilitartTimeValidator.validate(militaryTime)).toBe(false)
+  })
 })
