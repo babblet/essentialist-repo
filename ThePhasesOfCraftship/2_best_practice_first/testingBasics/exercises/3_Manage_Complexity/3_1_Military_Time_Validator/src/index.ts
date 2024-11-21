@@ -9,19 +9,20 @@
  * console.log(isValid); // true
  */
 export class MilitartTimeValidator {
+  private static validateTime(time: string): boolean {
+    if (!time) return false;
+    if (time.length !== 5) return false;
+    
+    const [hour, minute] = time.split(':').map(Number);
+
+    if (!hour || !minute ) return false;
+    if (hour > 23 || hour < 0) return false;
+    if (minute > 59 || minute < 0) return false;
+    return true;
+  }
+
   public static validate(militaryTime: string): boolean {
     const [leftTime, rightTime] = militaryTime.split(' - ');
-    if (!leftTime || !rightTime) return false;
-
-    if (leftTime.length !== 5 || rightTime.length !== 5) return false;
-    
-    const [leftHour, leftMinute] = leftTime.split(':').map(Number);
-    const [rightHour, rightMinute] = rightTime.split(':').map(Number);
-
-    if (!leftHour || !leftMinute || !rightHour || !rightMinute) return false;
-    if (leftHour > 23 || leftHour < 0 || rightHour > 23 || rightHour < 0) return false;
-    if (leftMinute > 59 || leftMinute < 0 || rightMinute > 59 || rightMinute < 0) return false;
-
-    return true;
+    return this.validateTime(leftTime) && this.validateTime(rightTime);
   }
 }
