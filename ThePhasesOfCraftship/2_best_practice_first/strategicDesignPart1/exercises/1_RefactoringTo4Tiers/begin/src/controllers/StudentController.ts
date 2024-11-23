@@ -37,7 +37,7 @@ export class StudentController {
     }
   }
 
-  static async read(req: Request, res: Response) {
+  static async getAll(req: Request, res: Response) {
     try {
       const students = await prisma.student.findMany({
         include: {

@@ -10,7 +10,7 @@ app.use(express.json());
 app.use(cors());
 
 app.post('/students', StudentController.create);
-app.get('/students', StudentController.read);
+app.get('/students', StudentController.getAll);
 app.post('/classes', ClassController.create)
 
 // POST student assigned to class
