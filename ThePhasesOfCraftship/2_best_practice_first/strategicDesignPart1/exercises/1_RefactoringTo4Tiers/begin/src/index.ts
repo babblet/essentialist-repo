@@ -4,6 +4,7 @@ import { StudentsController } from './controllers/StudentsController';
 import { Errors, isMissingKeys, isUUID, parseForResponse } from './shared';
 import { ClassesController } from './controllers/ClassesController';
 import { StudentController } from './controllers/StudentController';
+import { AssignmentsController } from './controllers/AssignmentsController';
 
 const cors = require('cors');
 const app = express();
@@ -19,6 +20,8 @@ app.get('/student/:id/grades', StudentController.readGrades);
 
 app.post('/classes', ClassesController.create)
 app.get('/classes/:id/assignments', ClassesController.readAssignments)
+
+app.post('/assignments', AssignmentsController.create)
 
 // POST student assigned to class
 app.post('/class-enrollments', async (req: Request, res: Response) => {
@@ -75,28 +78,6 @@ app.post('/class-enrollments', async (req: Request, res: Response) => {
         res.status(500).json({ error: Errors.ServerError, data: undefined, success: false });
     }
  
-});
-
-// POST assignment created
-app.post('/assignments', async (req: Request, res: Response) => {
-    try {
-        if (isMissingKeys(req.body, ['classId', 'title'])) {
-            return res.status(400).json({ error: Errors.ValidationError, data: undefined, success: false });
-        }
-    
-        const { classId, title } = req.body;
-    
-        const assignment = await prisma.assignment.create({
-            data: {
-                classId,
-                title
-            }
-        });
-    
-        res.status(201).json({ error: undefined, data: parseForResponse(assignment), success: true });
-    } catch (error) {
-        res.status(500).json({ error: Errors.ServerError, data: undefined, success: false });
-    }
 });
 
 
