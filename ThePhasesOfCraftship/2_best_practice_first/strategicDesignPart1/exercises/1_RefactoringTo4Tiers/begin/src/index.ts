@@ -28,43 +28,8 @@ app.get('/assignments/:id', AssignmentsController.read)
 
 app.post('/class-enrollments', ClassEnrollmentsController.create)
 
-// POST student assigned to assignment
 app.post('/student-assignments', StudentAssignmentsController.create)
-
-// POST student submitted assignment
-app.post('/student-assignments/submit', async (req: Request, res: Response) => {
-	try {
-		if (isMissingKeys(req.body, ['id'])) {
-			return res.status(400).json({ error: Errors.ValidationError, data: undefined, success: false });
-		}
-
-		const { id } = req.body;
-		
-		// check if student assignment exists
-		const studentAssignment = await prisma.studentAssignment.findUnique({
-			where: {
-				id
-			}
-		});
-
-		if (!studentAssignment) {
-			return res.status(404).json({ error: Errors.AssignmentNotFound, data: undefined, success: false });
-		}
-
-		const studentAssignmentUpdated = await prisma.studentAssignment.update({
-			where: {
-				id
-			},
-			data: {
-				status: 'submitted'
-			}
-		});
-
-		res.status(200).json({ error: undefined, data: parseForResponse(studentAssignmentUpdated), success: true });
-	} catch (error) {
-		res.status(500).json({ error: Errors.ServerError, data: undefined, success: false });
-	}
-});
+app.post('/student-assignments/submit', StudentAssignmentsController.submit)
 
 // POST student assignment graded
 app.post('/student-assignments/grade', async (req: Request, res: Response) => {
