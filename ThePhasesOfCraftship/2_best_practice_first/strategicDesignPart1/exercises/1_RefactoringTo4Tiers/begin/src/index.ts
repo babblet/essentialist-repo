@@ -1,7 +1,6 @@
 import express, { Request, Response } from 'express';
 import { prisma } from './database';
-import { Student, Class, Assignment, StudentAssignment } from '@prisma/client';
-import { error } from 'console';
+
 const cors = require('cors');
 const app = express();
 app.use(express.json());
@@ -164,7 +163,7 @@ app.post('/student-assignments', async (req: Request, res: Response) => {
             return res.status(400).json({ error: Errors.ValidationError, data: undefined, success: false });
         }
     
-        const { studentId, assignmentId, grade } = req.body;
+        const { studentId, assignmentId } = req.body;
     
         // check if student exists
         const student = await prisma.student.findUnique({
@@ -462,7 +461,7 @@ app.get('/student/:id/grades', async (req: Request, res: Response) => {
 })
 
 
-const port = process.env.PORT || 3000;
+const port = process.env.PORT ?? 3000;
 
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);

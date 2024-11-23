@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "build": "rimraf ./build && tsc",
+    "prisma": "prisma",
     "generate": "prisma generate",
     "migrate": "prisma migrate dev",
     "db:seed": "prisma db seed",
