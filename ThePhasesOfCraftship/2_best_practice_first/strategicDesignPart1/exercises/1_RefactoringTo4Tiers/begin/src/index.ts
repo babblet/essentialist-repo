@@ -1,18 +1,18 @@
 import express, { Request, Response } from 'express';
 import { prisma } from './database';
-import { StudentController } from './controllers/StudentController';
+import { StudentsController } from './controllers/StudentsController';
 import { Errors, isMissingKeys, isUUID, parseForResponse } from './shared';
-import { ClassController } from './controllers/ClassController';
+import { ClassesController } from './controllers/ClassesController';
 
 const cors = require('cors');
 const app = express();
 app.use(express.json());
 app.use(cors());
 
-app.post('/students', StudentController.create);
-app.get('/students/:id', StudentController.read); 
-app.get('/students', StudentController.readAll);
-app.post('/classes', ClassController.create)
+app.post('/students', StudentsController.create);
+app.get('/students/:id', StudentsController.read); 
+app.get('/students', StudentsController.readAll);
+app.post('/classes', ClassesController.create)
 
 // POST student assigned to class
 app.post('/class-enrollments', async (req: Request, res: Response) => {

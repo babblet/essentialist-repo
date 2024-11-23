@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import { prisma } from "../database";
 import { Errors, isMissingKeys, isUUID, parseForResponse } from "../shared";
 
-export class StudentController {
+export class StudentsController {
   static async create(req: Request, res: Response) {
     try {
       if (isMissingKeys(req.body, ["name"])) {
