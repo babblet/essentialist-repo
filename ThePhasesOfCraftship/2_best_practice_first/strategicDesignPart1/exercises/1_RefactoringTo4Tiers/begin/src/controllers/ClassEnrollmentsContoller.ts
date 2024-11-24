@@ -1,5 +1,4 @@
 import { Request, Response } from "express";
-import { prisma } from "../database";
 import { Errors, parseForResponse } from "../shared";
 import { CreateClassEnrollmentDTO } from "../dtos/classEnrollments";
 import { ClassEnrollmentsService } from "../services/ClassEnrollmentsService";

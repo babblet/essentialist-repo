@@ -1,5 +1,4 @@
 import { Request, Response } from "express";
-import { prisma } from "../database";
 import { Errors, parseForResponse } from "../shared";
 import { CreateAssignmentDTO, ReadAssignmentDTO } from "../dtos/assignments";
 import { AssignmentsService } from "../services/AssignmentsService";
