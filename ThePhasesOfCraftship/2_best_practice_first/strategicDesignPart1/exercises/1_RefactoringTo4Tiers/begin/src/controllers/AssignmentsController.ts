@@ -1,11 +1,13 @@
 import { Request, Response } from "express";
-import { Errors, isMissingKeys, isUUID, parseForResponse } from "../shared";
 import { prisma } from "../database";
+import { Errors, parseForResponse } from "../shared";
+import { CreateAssignmentDTO, ReadAssignmentDTO } from "../dtos/assignments";
 
 export class AssignmentsController {
   static async create(req: Request, res: Response) {
     try {
-      if (isMissingKeys(req.body, ["classId", "title"])) {
+      const dto = CreateAssignmentDTO.fromRequest(req);
+      if (!dto) {
         return res.status(400).json({
           error: Errors.ValidationError,
           data: undefined,
@@ -13,7 +15,7 @@ export class AssignmentsController {
         });
       }
 
-      const { classId, title } = req.body;
+      const { classId, title } = dto;
 
       const assignment = await prisma.assignment.create({
         data: {
@@ -33,18 +35,20 @@ export class AssignmentsController {
         .json({ error: Errors.ServerError, data: undefined, success: false });
     }
   }
+
   static async read(req: Request, res: Response) {
     try {
-      const { id } = req.params;
-      if (!isUUID(id)) {
-        return res
-          .status(400)
-          .json({
-            error: Errors.ValidationError,
-            data: undefined,
-            success: false,
-          });
+      const dto = ReadAssignmentDTO.fromRequest(req);
+      if (!dto) {
+        return res.status(400).json({
+          error: Errors.ValidationError,
+          data: undefined,
+          success: false,
+        });
       }
+
+      const { id } = dto;
+
       const assignment = await prisma.assignment.findUnique({
         include: {
           class: true,
@@ -56,22 +60,18 @@ export class AssignmentsController {
       });
 
       if (!assignment) {
-        return res
-          .status(404)
-          .json({
-            error: Errors.AssignmentNotFound,
-            data: undefined,
-            success: false,
-          });
+        return res.status(404).json({
+          error: Errors.AssignmentNotFound,
+          data: undefined,
+          success: false,
+        });
       }
 
-      res
-        .status(200)
-        .json({
-          error: undefined,
-          data: parseForResponse(assignment),
-          success: true,
-        });
+      res.status(200).json({
+        error: undefined,
+        data: parseForResponse(assignment),
+        success: true,
+      });
     } catch (error) {
       res
         .status(500)
