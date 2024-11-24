@@ -1,5 +1,5 @@
 import { Request } from "express";
-import { isMissingKeys, isUUID } from "../../shared";
+import { isMissingKeys, isUUID } from "../shared";
 
 export class CreateStudentDTO {
   private constructor(public name: string) {}
