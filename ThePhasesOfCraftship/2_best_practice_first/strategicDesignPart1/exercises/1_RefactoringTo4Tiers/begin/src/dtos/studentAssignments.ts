@@ -33,6 +33,11 @@ export class GradeStudentAssignmentDTO {
       return undefined;
     }
 
+    const { grade } = req.body;
+    if (!["A", "B", "C", "D"].includes(grade)) {
+      return undefined;
+    }
+
     return new GradeStudentAssignmentDTO(req.body.id, req.body.grade);
   }
 }

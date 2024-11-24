@@ -95,16 +95,6 @@ export class StudentAssignmentsController {
         });
       }
 
-      // TODO: Move this validation to the DTO
-      const { grade } = dto;
-      if (!["A", "B", "C", "D"].includes(grade)) {
-        return res.status(400).json({
-          error: Errors.ValidationError,
-          data: undefined,
-          success: false,
-        });
-      }
-
       const studentAssignmentUpdated =
         StudentAssignmentsService.gradeStudentAssignment(dto);
 
