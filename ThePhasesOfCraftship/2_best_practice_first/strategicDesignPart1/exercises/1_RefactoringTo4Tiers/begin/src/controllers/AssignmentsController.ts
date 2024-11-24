@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import { prisma } from "../database";
 import { Errors, parseForResponse } from "../shared";
 import { CreateAssignmentDTO, ReadAssignmentDTO } from "../dtos/assignments";
+import { AssignmentsService } from "../services/AssignmentsService";
 
 export class AssignmentsController {
   static async create(req: Request, res: Response) {
@@ -15,15 +16,7 @@ export class AssignmentsController {
         });
       }
 
-      const { classId, title } = dto;
-
-      const assignment = await prisma.assignment.create({
-        data: {
-          classId,
-          title,
-        },
-      });
-
+      const assignment = await AssignmentsService.createAssignment(dto);
       res.status(201).json({
         error: undefined,
         data: parseForResponse(assignment),
@@ -47,17 +40,7 @@ export class AssignmentsController {
         });
       }
 
-      const { id } = dto;
-
-      const assignment = await prisma.assignment.findUnique({
-        include: {
-          class: true,
-          studentTasks: true,
-        },
-        where: {
-          id,
-        },
-      });
+      const assignment = await AssignmentsService.readAssignment(dto);
 
       if (!assignment) {
         return res.status(404).json({

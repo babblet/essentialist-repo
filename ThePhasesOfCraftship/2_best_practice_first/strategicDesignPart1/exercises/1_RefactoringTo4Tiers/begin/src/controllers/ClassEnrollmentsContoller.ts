@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import { prisma } from "../database";
 import { Errors, parseForResponse } from "../shared";
 import { CreateClassEnrollmentDTO } from "../dtos/classEnrollments";
-import { ClassEnrollmentsService } from "../services/ClassEnrollmentsController";
+import { ClassEnrollmentsService } from "../services/ClassEnrollmentsService";
 
 export class ClassEnrollmentsController {
   static async create(req: Request, res: Response) {
