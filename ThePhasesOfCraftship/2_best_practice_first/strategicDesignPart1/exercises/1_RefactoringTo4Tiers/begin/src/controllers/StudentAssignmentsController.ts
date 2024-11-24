@@ -21,7 +21,7 @@ export class StudentAssignmentsController {
       }
 
       const studentAssignment =
-        StudentAssignmentsService.createStudentAssignment(dto);
+        await StudentAssignmentsService.createStudentAssignment(dto);
 
       if (!studentAssignment) {
         // TODO: Handle this error
@@ -62,7 +62,7 @@ export class StudentAssignmentsController {
       }
 
       const studentAssignmentUpdated =
-        StudentAssignmentsService.submitStudentAssignment(dto);
+        await StudentAssignmentsService.submitStudentAssignment(dto);
 
       if (!studentAssignmentUpdated) {
         return res.status(404).json({
@@ -96,7 +96,7 @@ export class StudentAssignmentsController {
       }
 
       const studentAssignmentUpdated =
-        StudentAssignmentsService.gradeStudentAssignment(dto);
+        await StudentAssignmentsService.gradeStudentAssignment(dto);
 
       if (!studentAssignmentUpdated) {
         return res.status(404).json({

@@ -21,7 +21,7 @@ export class StudentsController {
         });
       }
 
-      const student = StudentsService.createStudent(dto);
+      const student = await StudentsService.createStudent(dto);
 
       res.status(201).json({
         error: undefined,
@@ -47,7 +47,7 @@ export class StudentsController {
         });
       }
 
-      const student = StudentsService.readStudent(dto);
+      const student = await StudentsService.readStudent(dto);
 
       if (!student) {
         return res.status(404).json({
@@ -71,7 +71,7 @@ export class StudentsController {
 
   static async readAll(req: Request, res: Response) {
     try {
-      const students = StudentsService.readAllStudents();
+      const students = await StudentsService.readAllStudents();
       res.status(200).json({
         error: undefined,
         data: parseForResponse(students),
@@ -95,7 +95,7 @@ export class StudentsController {
         });
       }
 
-      const studentAssignments = StudentsService.readAssignments(dto);
+      const studentAssignments = await StudentsService.readAssignments(dto);
       if (studentAssignments === undefined) {
         return res.status(404).json({
           error: Errors.StudentNotFound,
@@ -127,7 +127,7 @@ export class StudentsController {
         });
       }
 
-      const studentAssignments = StudentsService.readGrades(dto);
+      const studentAssignments = await StudentsService.readGrades(dto);
       if (studentAssignments === undefined) {
         return res.status(404).json({
           error: Errors.StudentNotFound,
