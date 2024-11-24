@@ -1,11 +1,17 @@
 import { Request, Response } from "express";
 import { prisma } from "../database";
-import { isMissingKeys, Errors, parseForResponse } from "../shared";
+import { Errors, parseForResponse } from "../shared";
+import {
+  CreateStudentAssignmentDTO,
+  GradeStudentAssignmentDTO,
+  SubmitStudentAssignmentDTO,
+} from "../dtos/studentAssignments";
 
 export class StudentAssignmentsController {
   static async create(req: Request, res: Response) {
     try {
-      if (isMissingKeys(req.body, ["studentId", "assignmentId"])) {
+      const dto = CreateStudentAssignmentDTO.fromRequest(req);
+      if (!dto) {
         return res.status(400).json({
           error: Errors.ValidationError,
           data: undefined,
@@ -13,7 +19,7 @@ export class StudentAssignmentsController {
         });
       }
 
-      const { studentId, assignmentId } = req.body;
+      const { studentId, assignmentId } = dto;
 
       // check if student exists
       const student = await prisma.student.findUnique({
@@ -66,7 +72,8 @@ export class StudentAssignmentsController {
 
   static async submit(req: Request, res: Response) {
     try {
-      if (isMissingKeys(req.body, ["id"])) {
+      const dto = SubmitStudentAssignmentDTO.fromRequest(req);
+      if (!dto) {
         return res.status(400).json({
           error: Errors.ValidationError,
           data: undefined,
@@ -74,7 +81,7 @@ export class StudentAssignmentsController {
         });
       }
 
-      const { id } = req.body;
+      const { id } = dto;
 
       // check if student assignment exists
       const studentAssignment = await prisma.studentAssignment.findUnique({
@@ -114,27 +121,24 @@ export class StudentAssignmentsController {
 
   static async grade(req: Request, res: Response) {
     try {
-      if (isMissingKeys(req.body, ["id", "grade"])) {
-        return res
-          .status(400)
-          .json({
-            error: Errors.ValidationError,
-            data: undefined,
-            success: false,
-          });
+      const dto = GradeStudentAssignmentDTO.fromRequest(req);
+      if (!dto) {
+        return res.status(400).json({
+          error: Errors.ValidationError,
+          data: undefined,
+          success: false,
+        });
       }
 
-      const { id, grade } = req.body;
+      const { id, grade } = dto;
 
       // validate grade
       if (!["A", "B", "C", "D"].includes(grade)) {
-        return res
-          .status(400)
-          .json({
-            error: Errors.ValidationError,
-            data: undefined,
-            success: false,
-          });
+        return res.status(400).json({
+          error: Errors.ValidationError,
+          data: undefined,
+          success: false,
+        });
       }
 
       // check if student assignment exists
@@ -145,13 +149,11 @@ export class StudentAssignmentsController {
       });
 
       if (!studentAssignment) {
-        return res
-          .status(404)
-          .json({
-            error: Errors.AssignmentNotFound,
-            data: undefined,
-            success: false,
-          });
+        return res.status(404).json({
+          error: Errors.AssignmentNotFound,
+          data: undefined,
+          success: false,
+        });
       }
 
       const studentAssignmentUpdated = await prisma.studentAssignment.update({
@@ -163,13 +165,11 @@ export class StudentAssignmentsController {
         },
       });
 
-      res
-        .status(200)
-        .json({
-          error: undefined,
-          data: parseForResponse(studentAssignmentUpdated),
-          success: true,
-        });
+      res.status(200).json({
+        error: undefined,
+        data: parseForResponse(studentAssignmentUpdated),
+        success: true,
+      });
     } catch (error) {
       res
         .status(500)
