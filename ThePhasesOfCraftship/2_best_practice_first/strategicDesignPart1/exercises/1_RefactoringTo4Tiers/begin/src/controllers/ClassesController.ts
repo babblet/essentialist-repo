@@ -1,11 +1,13 @@
 import { Request, Response } from "express";
 import { Errors, isMissingKeys, isUUID, parseForResponse } from "../shared";
 import { prisma } from "../database";
+import { CreateClassDTO, ReadClassAssignmentsDTO } from "../dtos/classes";
 
 export class ClassesController {
   static async create(req: Request, res: Response) {
     try {
-      if (isMissingKeys(req.body, ["name"])) {
+      const dto = CreateClassDTO.fromRequest(req);
+      if (!dto) {
         return res.status(400).json({
           error: Errors.ValidationError,
           data: undefined,
@@ -13,7 +15,7 @@ export class ClassesController {
         });
       }
 
-      const { name } = req.body;
+      const { name } = dto;
 
       const cls = await prisma.class.create({
         data: {
@@ -33,16 +35,16 @@ export class ClassesController {
 
   static async readAssignments(req: Request, res: Response) {
     try {
-      const { id } = req.params;
-      if (!isUUID(id)) {
-        return res
-          .status(400)
-          .json({
-            error: Errors.ValidationError,
-            data: undefined,
-            success: false,
-          });
+      const dto = ReadClassAssignmentsDTO.fromRequest(req);
+      if (!dto) {
+        return res.status(400).json({
+          error: Errors.ValidationError,
+          data: undefined,
+          success: false,
+        });
       }
+
+      const { id } = dto;
 
       // check if class exists
       const cls = await prisma.class.findUnique({
@@ -52,13 +54,11 @@ export class ClassesController {
       });
 
       if (!cls) {
-        return res
-          .status(404)
-          .json({
-            error: Errors.ClassNotFound,
-            data: undefined,
-            success: false,
-          });
+        return res.status(404).json({
+          error: Errors.ClassNotFound,
+          data: undefined,
+          success: false,
+        });
       }
 
       const assignments = await prisma.assignment.findMany({
@@ -71,13 +71,11 @@ export class ClassesController {
         },
       });
 
-      res
-        .status(200)
-        .json({
-          error: undefined,
-          data: parseForResponse(assignments),
-          success: true,
-        });
+      res.status(200).json({
+        error: undefined,
+        data: parseForResponse(assignments),
+        success: true,
+      });
     } catch (error) {
       res
         .status(500)
