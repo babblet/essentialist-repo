@@ -1,21 +1,21 @@
 import { Request, Response } from "express";
 import { prisma } from "../database";
-import { isMissingKeys, Errors, parseForResponse } from "../shared";
+import { Errors, parseForResponse } from "../shared";
+import { CreateClassEnrollmentDTO } from "../dtos/classEnrollments";
 
 export class ClassEnrollmentsController {
   static async create(req: Request, res: Response) {
     try {
-      if (isMissingKeys(req.body, ["studentId", "classId"])) {
-        return res
-          .status(400)
-          .json({
-            error: Errors.ValidationError,
-            data: undefined,
-            success: false,
-          });
+      const dto = CreateClassEnrollmentDTO.fromRequest(req);
+      if (!dto) {
+        return res.status(400).json({
+          error: Errors.ValidationError,
+          data: undefined,
+          success: false,
+        });
       }
 
-      const { studentId, classId } = req.body;
+      const { studentId, classId } = dto;
 
       // check if student exists
       const student = await prisma.student.findUnique({
@@ -25,13 +25,11 @@ export class ClassEnrollmentsController {
       });
 
       if (!student) {
-        return res
-          .status(404)
-          .json({
-            error: Errors.StudentNotFound,
-            data: undefined,
-            success: false,
-          });
+        return res.status(404).json({
+          error: Errors.StudentNotFound,
+          data: undefined,
+          success: false,
+        });
       }
 
       // check if class exists
@@ -50,23 +48,19 @@ export class ClassEnrollmentsController {
       });
 
       if (duplicatedClassEnrollment) {
-        return res
-          .status(400)
-          .json({
-            error: Errors.StudentAlreadyEnrolled,
-            data: undefined,
-            success: false,
-          });
+        return res.status(400).json({
+          error: Errors.StudentAlreadyEnrolled,
+          data: undefined,
+          success: false,
+        });
       }
 
       if (!cls) {
-        return res
-          .status(404)
-          .json({
-            error: Errors.ClassNotFound,
-            data: undefined,
-            success: false,
-          });
+        return res.status(404).json({
+          error: Errors.ClassNotFound,
+          data: undefined,
+          success: false,
+        });
       }
 
       const classEnrollment = await prisma.classEnrollment.create({
@@ -76,13 +70,11 @@ export class ClassEnrollmentsController {
         },
       });
 
-      res
-        .status(201)
-        .json({
-          error: undefined,
-          data: parseForResponse(classEnrollment),
-          success: true,
-        });
+      res.status(201).json({
+        error: undefined,
+        data: parseForResponse(classEnrollment),
+        success: true,
+      });
     } catch (error) {
       res
         .status(500)
