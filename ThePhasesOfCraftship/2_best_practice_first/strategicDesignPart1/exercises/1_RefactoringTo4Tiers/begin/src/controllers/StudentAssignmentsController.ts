@@ -8,7 +8,11 @@ import {
 import { StudentAssignmentsService } from "../services/StudentAssignmentsService";
 
 export class StudentAssignmentsController {
-  static async create(req: Request, res: Response) {
+  constructor(
+    private readonly studentAssignmentsService: StudentAssignmentsService
+  ) {}
+
+  async create(req: Request, res: Response) {
     try {
       const dto = CreateStudentAssignmentDTO.fromRequest(req);
       if (!dto) {
@@ -20,7 +24,7 @@ export class StudentAssignmentsController {
       }
 
       const studentAssignment =
-        await StudentAssignmentsService.createStudentAssignment(dto);
+        await this.studentAssignmentsService.createStudentAssignment(dto);
 
       if (!studentAssignment) {
         // TODO: Handle this error
@@ -49,7 +53,7 @@ export class StudentAssignmentsController {
     }
   }
 
-  static async submit(req: Request, res: Response) {
+  async submit(req: Request, res: Response) {
     try {
       const dto = SubmitStudentAssignmentDTO.fromRequest(req);
       if (!dto) {
@@ -61,7 +65,7 @@ export class StudentAssignmentsController {
       }
 
       const studentAssignmentUpdated =
-        await StudentAssignmentsService.submitStudentAssignment(dto);
+        await this.studentAssignmentsService.submitStudentAssignment(dto);
 
       if (!studentAssignmentUpdated) {
         return res.status(404).json({
@@ -83,7 +87,7 @@ export class StudentAssignmentsController {
     }
   }
 
-  static async grade(req: Request, res: Response) {
+  async grade(req: Request, res: Response) {
     try {
       const dto = GradeStudentAssignmentDTO.fromRequest(req);
       if (!dto) {
@@ -95,7 +99,7 @@ export class StudentAssignmentsController {
       }
 
       const studentAssignmentUpdated =
-        await StudentAssignmentsService.gradeStudentAssignment(dto);
+        await this.studentAssignmentsService.gradeStudentAssignment(dto);
 
       if (!studentAssignmentUpdated) {
         return res.status(404).json({

@@ -3,29 +3,31 @@ import { CreateClassEnrollmentDTO } from "../dtos/classEnrollments";
 import { Database } from "../database";
 
 export class ClassEnrollmentsService {
-  static async createClassEnrollment(
+  constructor(private readonly database: Database) {}
+
+  async createClassEnrollment(
     dto: CreateClassEnrollmentDTO
   ): Promise<ClassEnrollment | undefined> {
     const { studentId, classId } = dto;
 
-    const student = await Database.findStudentById(studentId);
+    const student = await this.database.findStudentById(studentId);
     if (!student) {
       return undefined;
     }
 
-    const classData = await Database.findClassById(classId);
+    const classData = await this.database.findClassById(classId);
     if (!classData) {
       return undefined;
     }
 
     const isAlreadyClassEnrolled =
-      !!Database.findClassEnrollmentByClassAndStudent(classData, student);
+      !!this.database.findClassEnrollmentByClassAndStudent(classData, student);
 
     if (isAlreadyClassEnrolled) {
       return undefined;
     }
 
-    const classEnrollment = await Database.createClassEnrollment(
+    const classEnrollment = await this.database.createClassEnrollment(
       classData,
       student
     );

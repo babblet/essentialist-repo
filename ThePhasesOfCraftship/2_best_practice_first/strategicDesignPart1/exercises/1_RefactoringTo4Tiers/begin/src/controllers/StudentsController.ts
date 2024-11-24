@@ -9,7 +9,9 @@ import {
 import { StudentsService } from "../services/StudentsService";
 
 export class StudentsController {
-  static async create(req: Request, res: Response) {
+  constructor(private readonly studentsService: StudentsService) {}
+
+  async create(req: Request, res: Response) {
     try {
       const dto = CreateStudentDTO.fromRequest(req);
       if (!dto) {
@@ -20,7 +22,7 @@ export class StudentsController {
         });
       }
 
-      const student = await StudentsService.createStudent(dto);
+      const student = await this.studentsService.createStudent(dto);
 
       res.status(201).json({
         error: undefined,
@@ -35,7 +37,7 @@ export class StudentsController {
   }
 
   // GET a student by id
-  static async read(req: Request, res: Response) {
+  async read(req: Request, res: Response) {
     try {
       const dto = ReadStudentDTO.fromRequest(req);
       if (!dto) {
@@ -46,7 +48,7 @@ export class StudentsController {
         });
       }
 
-      const student = await StudentsService.readStudent(dto);
+      const student = await this.studentsService.readStudent(dto);
 
       if (!student) {
         return res.status(404).json({
@@ -68,9 +70,9 @@ export class StudentsController {
     }
   }
 
-  static async readAll(req: Request, res: Response) {
+  async readAll(req: Request, res: Response) {
     try {
-      const students = await StudentsService.readAllStudents();
+      const students = await this.studentsService.readAllStudents();
       res.status(200).json({
         error: undefined,
         data: parseForResponse(students),
@@ -83,7 +85,7 @@ export class StudentsController {
     }
   }
 
-  static async readAssignments(req: Request, res: Response) {
+  async readAssignments(req: Request, res: Response) {
     try {
       const dto = ReadStudentAssignmentsDTO.fromRequest(req);
       if (!dto) {
@@ -94,7 +96,9 @@ export class StudentsController {
         });
       }
 
-      const studentAssignments = await StudentsService.readAssignments(dto);
+      const studentAssignments = await this.studentsService.readAssignments(
+        dto
+      );
       if (studentAssignments === undefined) {
         return res.status(404).json({
           error: Errors.StudentNotFound,
@@ -115,7 +119,7 @@ export class StudentsController {
     }
   }
 
-  static async readGrades(req: Request, res: Response) {
+  async readGrades(req: Request, res: Response) {
     try {
       const dto = ReadStudentGradesDTO.fromRequest(req);
       if (!dto) {
@@ -126,7 +130,7 @@ export class StudentsController {
         });
       }
 
-      const studentAssignments = await StudentsService.readGrades(dto);
+      const studentAssignments = await this.studentsService.readGrades(dto);
       if (studentAssignments === undefined) {
         return res.status(404).json({
           error: Errors.StudentNotFound,

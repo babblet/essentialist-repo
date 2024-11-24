@@ -4,7 +4,9 @@ import { CreateAssignmentDTO, ReadAssignmentDTO } from "../dtos/assignments";
 import { AssignmentsService } from "../services/AssignmentsService";
 
 export class AssignmentsController {
-  static async create(req: Request, res: Response) {
+  constructor(private readonly assignmentsService: AssignmentsService) {}
+
+  async create(req: Request, res: Response) {
     try {
       const dto = CreateAssignmentDTO.fromRequest(req);
       if (!dto) {
@@ -15,7 +17,7 @@ export class AssignmentsController {
         });
       }
 
-      const assignment = await AssignmentsService.createAssignment(dto);
+      const assignment = await this.assignmentsService.createAssignment(dto);
       res.status(201).json({
         error: undefined,
         data: parseForResponse(assignment),
@@ -28,7 +30,7 @@ export class AssignmentsController {
     }
   }
 
-  static async read(req: Request, res: Response) {
+  async read(req: Request, res: Response) {
     try {
       const dto = ReadAssignmentDTO.fromRequest(req);
       if (!dto) {
@@ -39,7 +41,7 @@ export class AssignmentsController {
         });
       }
 
-      const assignment = await AssignmentsService.readAssignment(dto);
+      const assignment = await this.assignmentsService.readAssignment(dto);
 
       if (!assignment) {
         return res.status(404).json({

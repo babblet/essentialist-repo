@@ -8,52 +8,51 @@ import {
 } from "../dtos/students";
 
 export class StudentsService {
-  constructor() {}
+  constructor(private readonly database: Database) {}
 
   // We return the full student object here, do we DTO later?
-  static async createStudent(dto: CreateStudentDTO): Promise<Student> {
+  async createStudent(dto: CreateStudentDTO): Promise<Student> {
     const { name } = dto;
-    const student = await Database.createStudent(name);
+    const student = await this.database.createStudent(name);
     return student;
   }
 
-  static async readStudent(dto: ReadStudentDTO): Promise<Student | null> {
+  async readStudent(dto: ReadStudentDTO): Promise<Student | null> {
     const { id } = dto;
-    const student = await Database.findStudentById(id);
+    const student = await this.database.findStudentById(id);
     return student;
   }
 
-  static async readAllStudents(): Promise<Student[]> {
-    const students = await Database.getAllStudents();
+  async readAllStudents(): Promise<Student[]> {
+    const students = await this.database.getAllStudents();
     return students;
   }
 
-  static async readAssignments(
+  async readAssignments(
     dto: ReadStudentAssignmentsDTO
   ): Promise<StudentAssignment[] | undefined | null> {
     const { id } = dto;
-    const student = await Database.findStudentById(id);
-    if (!student) {
-      return undefined;
-    }
-
-    const studentAssignments = await Database.findStudentAssignmentsByStudent(
-      student
-    );
-    return studentAssignments;
-  }
-
-  static async readGrades(
-    dto: ReadStudentGradesDTO
-  ): Promise<StudentAssignment[] | undefined | null> {
-    const { id } = dto;
-    const student = await Database.findStudentById(id);
+    const student = await this.database.findStudentById(id);
     if (!student) {
       return undefined;
     }
 
     const studentAssignments =
-      await Database.findStudentAssignmentGradesByStudent(student);
+      await this.database.findStudentAssignmentsByStudent(student);
+    return studentAssignments;
+  }
+
+  async readGrades(
+    dto: ReadStudentGradesDTO
+  ): Promise<StudentAssignment[] | undefined | null> {
+    const { id } = dto;
+    const student = await this.database.findStudentById(id);
+    if (!student) {
+      return undefined;
+    }
+
+    const studentAssignments =
+      await this.database.findStudentAssignmentGradesByStudent(student);
     return studentAssignments;
   }
 }

@@ -3,19 +3,17 @@ import { CreateAssignmentDTO, ReadAssignmentDTO } from "../dtos/assignments";
 import { Database } from "../database";
 
 export class AssignmentsService {
-  constructor() {}
+  constructor(private readonly database: Database) {}
 
-  static async createAssignment(dto: CreateAssignmentDTO): Promise<Assignment> {
+  async createAssignment(dto: CreateAssignmentDTO): Promise<Assignment> {
     const { classId, title } = dto;
-    const assignment = await Database.createAssignment(classId, title);
+    const assignment = await this.database.createAssignment(classId, title);
     return assignment;
   }
 
-  static async readAssignment(
-    dto: ReadAssignmentDTO
-  ): Promise<Assignment | null> {
+  async readAssignment(dto: ReadAssignmentDTO): Promise<Assignment | null> {
     const { id } = dto;
-    const assignment = await Database.findAssignmentById(id);
+    const assignment = await this.database.findAssignmentById(id);
     return assignment;
   }
 }

@@ -3,25 +3,27 @@ import { Database } from "../database";
 import { CreateClassDTO, ReadClassAssignmentsDTO } from "../dtos/classes";
 
 export class ClassesService {
-  constructor() {}
+  constructor(private readonly database: Database) {}
 
-  static async createClass(dto: CreateClassDTO): Promise<Class> {
+  async createClass(dto: CreateClassDTO): Promise<Class> {
     const { name } = dto;
-    const classData = await Database.createClass(name);
+    const classData = await this.database.createClass(name);
     return classData;
   }
 
-  static async readClassAssignments(
+  async readClassAssignments(
     dto: ReadClassAssignmentsDTO
   ): Promise<Assignment[] | undefined | null> {
     const { id } = dto;
 
-    const classData = await Database.findClassById(id);
+    const classData = await this.database.findClassById(id);
     if (!classData) {
       return undefined;
     }
 
-    const assignments = await Database.findClassAssignmentsByClass(classData);
+    const assignments = await this.database.findClassAssignmentsByClass(
+      classData
+    );
     return assignments;
   }
 }

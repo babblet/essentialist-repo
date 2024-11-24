@@ -4,7 +4,11 @@ import { CreateClassEnrollmentDTO } from "../dtos/classEnrollments";
 import { ClassEnrollmentsService } from "../services/ClassEnrollmentsService";
 
 export class ClassEnrollmentsController {
-  static async create(req: Request, res: Response) {
+  constructor(
+    private readonly classEnrollmentsService: ClassEnrollmentsService
+  ) {}
+
+  async create(req: Request, res: Response) {
     try {
       const dto = CreateClassEnrollmentDTO.fromRequest(req);
       if (!dto) {
@@ -16,7 +20,7 @@ export class ClassEnrollmentsController {
       }
 
       const classEnrollment =
-        await ClassEnrollmentsService.createClassEnrollment(dto);
+        await this.classEnrollmentsService.createClassEnrollment(dto);
 
       if (classEnrollment === undefined) {
         // TODO: Handle all errors
