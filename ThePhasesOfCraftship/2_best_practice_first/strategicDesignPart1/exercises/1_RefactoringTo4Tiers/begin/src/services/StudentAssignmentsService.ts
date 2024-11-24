@@ -1,5 +1,5 @@
 import { StudentAssignment } from "@prisma/client";
-import { prisma } from "../database";
+import { Database } from "../database";
 import {
   CreateStudentAssignmentDTO,
   GradeStudentAssignmentDTO,
@@ -13,34 +13,23 @@ export class StudentAssignmentsService {
     dto: CreateStudentAssignmentDTO
   ): Promise<StudentAssignment | undefined> {
     const { studentId, assignmentId } = dto;
-    // check if student exists
-    const student = await prisma.student.findUnique({
-      where: {
-        id: studentId,
-      },
-    });
 
+    const student = await Database.findStudentById(studentId);
     if (!student) {
       return undefined;
     }
 
     // check if assignment exists
-    const assignment = await prisma.assignment.findUnique({
-      where: {
-        id: assignmentId,
-      },
-    });
+    const assignment = await Database.findAssignmentById(assignmentId);
 
     if (!assignment) {
       return undefined;
     }
 
-    const studentAssignment = await prisma.studentAssignment.create({
-      data: {
-        studentId,
-        assignmentId,
-      },
-    });
+    const studentAssignment = await Database.createStudentAssignment(
+      student,
+      assignment
+    );
 
     return studentAssignment;
   }
@@ -50,20 +39,15 @@ export class StudentAssignmentsService {
   ): Promise<StudentAssignment | undefined> {
     const { id } = dto;
 
-    const studentAssignment = await prisma.studentAssignment.findUnique({
-      where: {
-        id,
-      },
-    });
+    const studentAssignment = await Database.findStudentAssignmentById(id);
 
-    const studentAssignmentUpdated = await prisma.studentAssignment.update({
-      where: {
-        id,
-      },
-      data: {
-        status: "submitted",
-      },
-    });
+    if (!studentAssignment) {
+      return undefined;
+    }
+
+    const studentAssignmentUpdated = await Database.submitStudentAssignment(
+      studentAssignment
+    );
 
     return studentAssignmentUpdated;
   }
@@ -72,24 +56,16 @@ export class StudentAssignmentsService {
     dto: GradeStudentAssignmentDTO
   ): Promise<StudentAssignment | undefined> {
     const { id, grade } = dto;
-    const studentAssignment = await prisma.studentAssignment.findUnique({
-      where: {
-        id,
-      },
-    });
+    const studentAssignment = await Database.findStudentAssignmentById(id);
 
     if (!studentAssignment) {
       return undefined;
     }
 
-    const studentAssignmentUpdated = await prisma.studentAssignment.update({
-      where: {
-        id,
-      },
-      data: {
-        grade,
-      },
-    });
+    const studentAssignmentUpdated = await Database.gradeStudentAssignment(
+      studentAssignment,
+      grade
+    );
     return studentAssignmentUpdated;
   }
 }

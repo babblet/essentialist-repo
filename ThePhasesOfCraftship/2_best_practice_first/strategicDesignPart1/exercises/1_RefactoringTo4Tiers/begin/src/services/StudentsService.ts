@@ -1,4 +1,4 @@
-import { prisma } from "../database";
+import { Database } from "../database";
 import { Student, StudentAssignment } from "@prisma/client";
 import {
   CreateStudentDTO,
@@ -13,43 +13,18 @@ export class StudentsService {
   // We return the full student object here, do we DTO later?
   static async createStudent(dto: CreateStudentDTO): Promise<Student> {
     const { name } = dto;
-    const student = await prisma.student.create({
-      data: {
-        name,
-      },
-    });
-
+    const student = await Database.createStudent(name);
     return student;
   }
 
   static async readStudent(dto: ReadStudentDTO): Promise<Student | null> {
     const { id } = dto;
-    const student = await prisma.student.findUnique({
-      where: {
-        id,
-      },
-      include: {
-        classes: true,
-        assignments: true,
-        reportCards: true,
-      },
-    });
-
+    const student = await Database.findStudentById(id);
     return student;
   }
 
   static async readAllStudents(): Promise<Student[]> {
-    const students = await prisma.student.findMany({
-      include: {
-        classes: true,
-        assignments: true,
-        reportCards: true,
-      },
-      orderBy: {
-        name: "asc",
-      },
-    });
-
+    const students = await Database.getAllStudents();
     return students;
   }
 
@@ -57,26 +32,14 @@ export class StudentsService {
     dto: ReadStudentAssignmentsDTO
   ): Promise<StudentAssignment[] | undefined | null> {
     const { id } = dto;
-    const student = await prisma.student.findUnique({
-      where: {
-        id,
-      },
-    });
-
+    const student = await Database.findStudentById(id);
     if (!student) {
       return undefined;
     }
 
-    const studentAssignments = await prisma.studentAssignment.findMany({
-      where: {
-        studentId: id,
-        status: "submitted",
-      },
-      include: {
-        assignment: true,
-      },
-    });
-
+    const studentAssignments = await Database.findStudentAssignmentsByStudent(
+      student
+    );
     return studentAssignments;
   }
 
@@ -84,29 +47,13 @@ export class StudentsService {
     dto: ReadStudentGradesDTO
   ): Promise<StudentAssignment[] | undefined | null> {
     const { id } = dto;
-    const student = await prisma.student.findUnique({
-      where: {
-        id,
-      },
-    });
-
+    const student = await Database.findStudentById(id);
     if (!student) {
       return undefined;
     }
 
-    const studentAssignments = await prisma.studentAssignment.findMany({
-      where: {
-        studentId: id,
-        status: "submitted",
-        grade: {
-          not: null,
-        },
-      },
-      include: {
-        assignment: true,
-      },
-    });
-
+    const studentAssignments =
+      await Database.findStudentAssignmentGradesByStudent(student);
     return studentAssignments;
   }
 }

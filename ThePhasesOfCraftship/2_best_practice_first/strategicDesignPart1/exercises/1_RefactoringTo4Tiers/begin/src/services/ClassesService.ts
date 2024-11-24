@@ -1,5 +1,5 @@
 import { Assignment, Class } from "@prisma/client";
-import { prisma } from "../database";
+import { Database } from "../database";
 import { CreateClassDTO, ReadClassAssignmentsDTO } from "../dtos/classes";
 
 export class ClassesService {
@@ -7,11 +7,7 @@ export class ClassesService {
 
   static async createClass(dto: CreateClassDTO): Promise<Class> {
     const { name } = dto;
-    const classData = await prisma.class.create({
-      data: {
-        name,
-      },
-    });
+    const classData = await Database.createClass(name);
     return classData;
   }
 
@@ -20,26 +16,12 @@ export class ClassesService {
   ): Promise<Assignment[] | undefined | null> {
     const { id } = dto;
 
-    const classData = await prisma.class.findUnique({
-      where: {
-        id,
-      },
-    });
-
+    const classData = await Database.findClassById(id);
     if (!classData) {
       return undefined;
     }
 
-    const assignments = await prisma.assignment.findMany({
-      where: {
-        classId: id,
-      },
-      include: {
-        class: true,
-        studentTasks: true,
-      },
-    });
-
+    const assignments = await Database.findClassAssignmentsByClass(classData);
     return assignments;
   }
 }

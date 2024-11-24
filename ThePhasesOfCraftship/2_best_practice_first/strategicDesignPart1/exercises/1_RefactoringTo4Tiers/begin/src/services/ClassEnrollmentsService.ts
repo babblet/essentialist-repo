@@ -1,6 +1,6 @@
 import { ClassEnrollment } from "@prisma/client";
 import { CreateClassEnrollmentDTO } from "../dtos/classEnrollments";
-import { prisma } from "../database";
+import { Database } from "../database";
 
 export class ClassEnrollmentsService {
   static async createClassEnrollment(
@@ -8,46 +8,27 @@ export class ClassEnrollmentsService {
   ): Promise<ClassEnrollment | undefined> {
     const { studentId, classId } = dto;
 
-    // check if student exists
-    const student = await prisma.student.findUnique({
-      where: {
-        id: studentId,
-      },
-    });
-
+    const student = await Database.findStudentById(studentId);
     if (!student) {
       return undefined;
     }
 
-    // check if class exists
-    const classData = await prisma.class.findUnique({
-      where: {
-        id: classId,
-      },
-    });
-
-    // check if student is already enrolled in class
-    const duplicatedClassEnrollment = await prisma.classEnrollment.findFirst({
-      where: {
-        studentId,
-        classId,
-      },
-    });
-
-    if (duplicatedClassEnrollment) {
-      return undefined;
-    }
-
+    const classData = await Database.findClassById(classId);
     if (!classData) {
       return undefined;
     }
 
-    const classEnrollment = await prisma.classEnrollment.create({
-      data: {
-        studentId,
-        classId,
-      },
-    });
+    const isAlreadyClassEnrolled =
+      !!Database.findClassEnrollmentByClassAndStudent(classData, student);
+
+    if (isAlreadyClassEnrolled) {
+      return undefined;
+    }
+
+    const classEnrollment = await Database.createClassEnrollment(
+      classData,
+      student
+    );
 
     return classEnrollment;
   }

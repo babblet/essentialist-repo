@@ -1,5 +1,4 @@
 import express, { Request, Response } from "express";
-import { prisma } from "./database";
 import { Errors, isMissingKeys, isUUID, parseForResponse } from "./shared";
 import { StudentsController } from "./controllers/StudentsController";
 import { ClassesController } from "./controllers/ClassesController";
