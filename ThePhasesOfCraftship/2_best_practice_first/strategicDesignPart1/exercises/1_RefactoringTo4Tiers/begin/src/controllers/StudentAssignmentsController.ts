@@ -6,6 +6,7 @@ import {
   GradeStudentAssignmentDTO,
   SubmitStudentAssignmentDTO,
 } from "../dtos/studentAssignments";
+import { StudentAssignmentsService } from "../services/StudentAssignmentsService";
 
 export class StudentAssignmentsController {
   static async create(req: Request, res: Response) {
@@ -19,44 +20,23 @@ export class StudentAssignmentsController {
         });
       }
 
-      const { studentId, assignmentId } = dto;
+      const studentAssignment =
+        StudentAssignmentsService.createStudentAssignment(dto);
 
-      // check if student exists
-      const student = await prisma.student.findUnique({
-        where: {
-          id: studentId,
-        },
-      });
+      if (!studentAssignment) {
+        // TODO: Handle this error
+        // return res.status(404).json({
+        //   error: Errors.StudentNotFound,
+        //   data: undefined,
+        //   success: false,
+        // });
 
-      if (!student) {
-        return res.status(404).json({
-          error: Errors.StudentNotFound,
-          data: undefined,
-          success: false,
-        });
-      }
-
-      // check if assignment exists
-      const assignment = await prisma.assignment.findUnique({
-        where: {
-          id: assignmentId,
-        },
-      });
-
-      if (!assignment) {
         return res.status(404).json({
           error: Errors.AssignmentNotFound,
           data: undefined,
           success: false,
         });
       }
-
-      const studentAssignment = await prisma.studentAssignment.create({
-        data: {
-          studentId,
-          assignmentId,
-        },
-      });
 
       res.status(201).json({
         error: undefined,
@@ -81,31 +61,16 @@ export class StudentAssignmentsController {
         });
       }
 
-      const { id } = dto;
+      const studentAssignmentUpdated =
+        StudentAssignmentsService.submitStudentAssignment(dto);
 
-      // check if student assignment exists
-      const studentAssignment = await prisma.studentAssignment.findUnique({
-        where: {
-          id,
-        },
-      });
-
-      if (!studentAssignment) {
+      if (!studentAssignmentUpdated) {
         return res.status(404).json({
           error: Errors.AssignmentNotFound,
           data: undefined,
           success: false,
         });
       }
-
-      const studentAssignmentUpdated = await prisma.studentAssignment.update({
-        where: {
-          id,
-        },
-        data: {
-          status: "submitted",
-        },
-      });
 
       res.status(200).json({
         error: undefined,
@@ -130,9 +95,8 @@ export class StudentAssignmentsController {
         });
       }
 
-      const { id, grade } = dto;
-
-      // validate grade
+      // TODO: Move this validation to the DTO
+      const { grade } = dto;
       if (!["A", "B", "C", "D"].includes(grade)) {
         return res.status(400).json({
           error: Errors.ValidationError,
@@ -141,29 +105,16 @@ export class StudentAssignmentsController {
         });
       }
 
-      // check if student assignment exists
-      const studentAssignment = await prisma.studentAssignment.findUnique({
-        where: {
-          id,
-        },
-      });
+      const studentAssignmentUpdated =
+        StudentAssignmentsService.gradeStudentAssignment(dto);
 
-      if (!studentAssignment) {
+      if (!studentAssignmentUpdated) {
         return res.status(404).json({
           error: Errors.AssignmentNotFound,
           data: undefined,
           success: false,
         });
       }
-
-      const studentAssignmentUpdated = await prisma.studentAssignment.update({
-        where: {
-          id,
-        },
-        data: {
-          grade,
-        },
-      });
 
       res.status(200).json({
         error: undefined,
