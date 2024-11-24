@@ -108,7 +108,7 @@ export class Database {
       }
     );
 
-    return studentAssignment;
+    return studentAssignmentUpdated;
   }
 
   async gradeStudentAssignment(

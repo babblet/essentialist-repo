@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { Errors, parseForResponse } from "../shared";
+import { Errors, parseForResponse } from "../shared/shared";
 import {
   CreateStudentDTO,
   ReadStudentAssignmentsDTO,
@@ -7,9 +7,29 @@ import {
   ReadStudentGradesDTO,
 } from "../dtos/students";
 import { StudentsService } from "../services/StudentsService";
+import { Controller, Route } from "../server/ServerRouter";
+import { InvalidRequestBodyException } from "../shared/exceptions";
 
-export class StudentsController {
+export class StudentsController implements Controller {
   constructor(private readonly studentsService: StudentsService) {}
+
+  routes(): Array<Route> {
+    return [
+      { method: "post", path: "/students", handler: this.create },
+      { method: "get", path: "/students/:id", handler: this.read },
+      { method: "get", path: "/students", handler: this.readAll },
+      {
+        method: "get",
+        path: "/students/:id/assignments",
+        handler: this.readAssignments,
+      },
+      {
+        method: "get",
+        path: "/students/:id/grades",
+        handler: this.readGrades,
+      },
+    ];
+  }
 
   async create(req: Request, res: Response) {
     try {
@@ -71,6 +91,7 @@ export class StudentsController {
   }
 
   async readAll(req: Request, res: Response) {
+    throw new Error("Just a test");
     try {
       const students = await this.studentsService.readAllStudents();
       res.status(200).json({

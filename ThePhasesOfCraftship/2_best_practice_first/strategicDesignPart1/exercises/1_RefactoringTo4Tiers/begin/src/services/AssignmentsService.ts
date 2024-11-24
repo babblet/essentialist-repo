@@ -1,6 +1,6 @@
 import { Assignment } from "@prisma/client";
 import { CreateAssignmentDTO, ReadAssignmentDTO } from "../dtos/assignments";
-import { Database } from "../database";
+import { Database } from "../shared/database";
 
 export class AssignmentsService {
   constructor(private readonly database: Database) {}

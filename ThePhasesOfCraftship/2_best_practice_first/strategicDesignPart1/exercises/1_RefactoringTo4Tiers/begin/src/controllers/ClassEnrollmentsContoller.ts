@@ -1,12 +1,19 @@
 import { Request, Response } from "express";
-import { Errors, parseForResponse } from "../shared";
+import { Errors, parseForResponse } from "../shared/shared";
 import { CreateClassEnrollmentDTO } from "../dtos/classEnrollments";
 import { ClassEnrollmentsService } from "../services/ClassEnrollmentsService";
+import { Controller, Route } from "../server/ServerRouter";
 
-export class ClassEnrollmentsController {
+export class ClassEnrollmentsController implements Controller {
   constructor(
     private readonly classEnrollmentsService: ClassEnrollmentsService
   ) {}
+
+  routes(): Array<Route> {
+    return [
+      { method: "post", path: "/class-enrollments", handler: this.create },
+    ];
+  }
 
   async create(req: Request, res: Response) {
     try {

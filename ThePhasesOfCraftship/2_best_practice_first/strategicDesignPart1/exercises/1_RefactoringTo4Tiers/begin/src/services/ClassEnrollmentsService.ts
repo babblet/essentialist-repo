@@ -1,6 +1,6 @@
 import { ClassEnrollment } from "@prisma/client";
 import { CreateClassEnrollmentDTO } from "../dtos/classEnrollments";
-import { Database } from "../database";
+import { Database } from "../shared/database";
 
 export class ClassEnrollmentsService {
   constructor(private readonly database: Database) {}

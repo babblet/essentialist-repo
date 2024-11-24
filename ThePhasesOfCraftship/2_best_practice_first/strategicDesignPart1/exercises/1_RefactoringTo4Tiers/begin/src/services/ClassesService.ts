@@ -1,5 +1,5 @@
 import { Assignment, Class } from "@prisma/client";
-import { Database } from "../database";
+import { Database } from "../shared/database";
 import { CreateClassDTO, ReadClassAssignmentsDTO } from "../dtos/classes";
 
 export class ClassesService {

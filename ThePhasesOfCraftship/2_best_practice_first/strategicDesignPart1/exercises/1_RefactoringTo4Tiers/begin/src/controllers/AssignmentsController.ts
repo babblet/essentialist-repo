@@ -1,10 +1,18 @@
 import { Request, Response } from "express";
-import { Errors, parseForResponse } from "../shared";
+import { Errors, parseForResponse } from "../shared/shared";
 import { CreateAssignmentDTO, ReadAssignmentDTO } from "../dtos/assignments";
 import { AssignmentsService } from "../services/AssignmentsService";
+import { Controller, Route } from "../server/ServerRouter";
 
-export class AssignmentsController {
+export class AssignmentsController implements Controller {
   constructor(private readonly assignmentsService: AssignmentsService) {}
+
+  routes(): Array<Route> {
+    return [
+      { method: "post", path: "/assignments", handler: this.create },
+      { method: "get", path: "/assignments/:id", handler: this.read },
+    ];
+  }
 
   async create(req: Request, res: Response) {
     try {

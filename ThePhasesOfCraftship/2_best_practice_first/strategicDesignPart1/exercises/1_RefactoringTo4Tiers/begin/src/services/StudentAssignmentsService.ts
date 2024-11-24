@@ -1,5 +1,5 @@
 import { StudentAssignment } from "@prisma/client";
-import { Database } from "../database";
+import { Database } from "../shared/database";
 import {
   CreateStudentAssignmentDTO,
   GradeStudentAssignmentDTO,
