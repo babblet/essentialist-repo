@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import { prisma } from "../database";
 import { Errors, parseForResponse } from "../shared";
 import { CreateClassEnrollmentDTO } from "../dtos/classEnrollments";
+import { ClassEnrollmentsService } from "../services/ClassEnrollmentsController";
 
 export class ClassEnrollmentsController {
   static async create(req: Request, res: Response) {
@@ -15,60 +16,27 @@ export class ClassEnrollmentsController {
         });
       }
 
-      const { studentId, classId } = dto;
+      const classEnrollment =
+        await ClassEnrollmentsService.createClassEnrollment(dto);
 
-      // check if student exists
-      const student = await prisma.student.findUnique({
-        where: {
-          id: studentId,
-        },
-      });
-
-      if (!student) {
+      if (classEnrollment === undefined) {
+        // TODO: Handle all errors
         return res.status(404).json({
           error: Errors.StudentNotFound,
           data: undefined,
           success: false,
         });
+        //return res.status(400).json({
+        //  error: Errors.StudentAlreadyEnrolled,
+        //  data: undefined,
+        //  success: false,
+        //});
+        //return res.status(404).json({
+        //  error: Errors.ClassNotFound,
+        //  data: undefined,
+        //  success: false,
+        //});
       }
-
-      // check if class exists
-      const cls = await prisma.class.findUnique({
-        where: {
-          id: classId,
-        },
-      });
-
-      // check if student is already enrolled in class
-      const duplicatedClassEnrollment = await prisma.classEnrollment.findFirst({
-        where: {
-          studentId,
-          classId,
-        },
-      });
-
-      if (duplicatedClassEnrollment) {
-        return res.status(400).json({
-          error: Errors.StudentAlreadyEnrolled,
-          data: undefined,
-          success: false,
-        });
-      }
-
-      if (!cls) {
-        return res.status(404).json({
-          error: Errors.ClassNotFound,
-          data: undefined,
-          success: false,
-        });
-      }
-
-      const classEnrollment = await prisma.classEnrollment.create({
-        data: {
-          studentId,
-          classId,
-        },
-      });
 
       res.status(201).json({
         error: undefined,
