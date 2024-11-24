@@ -6,6 +6,14 @@ import {
   ClassEnrollment,
   Assignment,
 } from "@prisma/client";
+import { objectEnumValues } from "@prisma/client/runtime";
+import {
+  AssignmentNotFoundException,
+  ClassEnrollmentNotFoundException,
+  ClassNotFoundException,
+  StudentAssignmentNotFoundException,
+  StudentNotFoundException,
+} from "./exceptions";
 
 export class Database {
   constructor(private readonly client: PrismaClient) {}
@@ -21,7 +29,7 @@ export class Database {
     return student;
   }
 
-  async findStudentById(id: string): Promise<Student | null> {
+  async findStudentById(id: string): Promise<Student> {
     const student = await this.client.student.findUnique({
       where: {
         id,
@@ -32,6 +40,11 @@ export class Database {
         reportCards: true,
       },
     });
+
+    if (!student) {
+      throw new StudentNotFoundException();
+    }
+
     return student;
   }
 
@@ -50,18 +63,21 @@ export class Database {
   }
 
   // Student Assignments
-  findStudentAssignmentById(id: string): Promise<StudentAssignment | null> {
-    const studentAssignment = this.client.studentAssignment.findUnique({
+  async findStudentAssignmentById(id: string): Promise<StudentAssignment> {
+    const studentAssignment = await this.client.studentAssignment.findUnique({
       where: {
         id,
       },
     });
+
+    if (!studentAssignment) throw new StudentAssignmentNotFoundException();
+
     return studentAssignment;
   }
 
   async findStudentAssignmentsByStudent(
     student: Student
-  ): Promise<StudentAssignment[] | null> {
+  ): Promise<StudentAssignment[]> {
     const studentAssignments = await this.client.studentAssignment.findMany({
       where: {
         studentId: student.id,
@@ -77,7 +93,7 @@ export class Database {
 
   async findStudentAssignmentGradesByStudent(
     student: Student
-  ): Promise<StudentAssignment[] | null> {
+  ): Promise<StudentAssignment[]> {
     const studentAssignments = await this.client.studentAssignment.findMany({
       where: {
         studentId: student.id,
@@ -108,13 +124,13 @@ export class Database {
       }
     );
 
-    return studentAssignment;
+    return studentAssignmentUpdated;
   }
 
   async gradeStudentAssignment(
     studentAssignment: StudentAssignment,
     grade: string
-  ) {
+  ): Promise<StudentAssignment> {
     const studentAssignmentUpdated = await this.client.studentAssignment.update(
       {
         where: {
@@ -144,12 +160,15 @@ export class Database {
   }
 
   // Classes
-  async findClassById(id: string): Promise<Class | null> {
+  async findClassById(id: string): Promise<Class> {
     const classData = await this.client.class.findUnique({
       where: {
         id,
       },
     });
+
+    if (!classData) throw new ClassNotFoundException();
+
     return classData;
   }
 
@@ -163,9 +182,7 @@ export class Database {
   }
 
   // Class Assignments
-  async findClassAssignmentsByClass(
-    classData: Class
-  ): Promise<Assignment[] | null> {
+  async findClassAssignmentsByClass(classData: Class): Promise<Assignment[]> {
     const assignments = await this.client.assignment.findMany({
       where: {
         classId: classData.id,
@@ -175,6 +192,8 @@ export class Database {
         studentTasks: true,
       },
     });
+
+    if (!assignments) throw new AssignmentNotFoundException();
 
     return assignments;
   }
@@ -196,13 +215,16 @@ export class Database {
   async findClassEnrollmentByClassAndStudent(
     classData: Class,
     Student: Student
-  ): Promise<ClassEnrollment | null> {
+  ): Promise<ClassEnrollment> {
     const classEnrollment = await this.client.classEnrollment.findFirst({
       where: {
         classId: classData.id,
         studentId: Student.id,
       },
     });
+
+    if (!classEnrollment) throw new ClassEnrollmentNotFoundException();
+
     return classEnrollment;
   }
 
@@ -218,7 +240,7 @@ export class Database {
     return assignment;
   }
 
-  async findAssignmentById(id: string): Promise<Assignment | null> {
+  async findAssignmentById(id: string): Promise<Assignment> {
     const assignment = await this.client.assignment.findUnique({
       where: {
         id,
@@ -228,6 +250,8 @@ export class Database {
         studentTasks: true,
       },
     });
+
+    if (!assignment) throw new AssignmentNotFoundException();
 
     return assignment;
   }

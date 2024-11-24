@@ -1,11 +1,15 @@
 import { Request } from "express";
-import { isMissingKeys, isUUID } from "../shared";
+import { isMissingKeys, isUUID } from "../shared/shared";
+import {
+  DTOMissingKeysException,
+  MalformedUUIDException,
+} from "../shared/exceptions";
 
 export class CreateStudentDTO {
   private constructor(public name: string) {}
-  static fromRequest(req: Request): CreateStudentDTO | undefined {
+  static fromRequest(req: Request): CreateStudentDTO {
     if (isMissingKeys(req.body, ["name"])) {
-      return undefined;
+      throw new DTOMissingKeysException(["name"]);
     }
 
     return new CreateStudentDTO(req.body.name);
@@ -14,11 +18,11 @@ export class CreateStudentDTO {
 
 export class ReadStudentDTO {
   private constructor(public id: string) {}
-  static fromRequest(req: Request): ReadStudentDTO | undefined {
+  static fromRequest(req: Request): ReadStudentDTO {
     const { id } = req.params;
 
     if (!isUUID(id)) {
-      return undefined;
+      throw new MalformedUUIDException();
     }
 
     return new ReadStudentDTO(id);
@@ -27,11 +31,11 @@ export class ReadStudentDTO {
 
 export class ReadStudentAssignmentsDTO {
   private constructor(public id: string) {}
-  static fromRequest(req: Request): ReadStudentAssignmentsDTO | undefined {
+  static fromRequest(req: Request): ReadStudentAssignmentsDTO {
     const { id } = req.params;
 
     if (!isUUID(id)) {
-      return undefined;
+      throw new MalformedUUIDException();
     }
 
     return new ReadStudentAssignmentsDTO(id);
@@ -40,11 +44,11 @@ export class ReadStudentAssignmentsDTO {
 
 export class ReadStudentGradesDTO {
   private constructor(public id: string) {}
-  static fromRequest(req: Request): ReadStudentGradesDTO | undefined {
+  static fromRequest(req: Request): ReadStudentGradesDTO {
     const { id } = req.params;
 
     if (!isUUID(id)) {
-      return undefined;
+      throw new MalformedUUIDException();
     }
 
     return new ReadStudentGradesDTO(id);

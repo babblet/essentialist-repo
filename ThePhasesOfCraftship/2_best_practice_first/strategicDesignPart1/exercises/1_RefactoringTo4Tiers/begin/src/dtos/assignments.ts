@@ -1,11 +1,15 @@
 import { Request } from "express";
-import { isMissingKeys, isUUID } from "../shared";
+import { isMissingKeys, isUUID } from "../shared/shared";
+import {
+  DTOMissingKeysException,
+  MalformedUUIDException,
+} from "../shared/exceptions";
 
 export class CreateAssignmentDTO {
   private constructor(public classId: string, public title: string) {}
-  static fromRequest(req: Request): CreateAssignmentDTO | undefined {
+  static fromRequest(req: Request): CreateAssignmentDTO {
     if (isMissingKeys(req.body, ["classId", "title"])) {
-      return undefined;
+      throw new DTOMissingKeysException(["classId", "title"]);
     }
 
     return new CreateAssignmentDTO(req.body.classId, req.body.title);
@@ -14,11 +18,11 @@ export class CreateAssignmentDTO {
 
 export class ReadAssignmentDTO {
   private constructor(public id: string) {}
-  static fromRequest(req: Request): ReadAssignmentDTO | undefined {
+  static fromRequest(req: Request): ReadAssignmentDTO {
     const { id } = req.params;
 
     if (!isUUID(id)) {
-      return undefined;
+      throw new MalformedUUIDException();
     }
 
     return new ReadAssignmentDTO(id);

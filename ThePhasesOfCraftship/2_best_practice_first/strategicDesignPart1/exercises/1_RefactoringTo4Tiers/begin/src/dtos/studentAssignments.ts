@@ -1,11 +1,16 @@
 import { Request } from "express";
-import { isMissingKeys } from "../shared";
+import { isMissingKeys } from "../shared/shared";
+import {
+  DTOIncorredDataInKeysException,
+  DTOMissingKeysException,
+  MalformedUUIDException,
+} from "../shared/exceptions";
 
 export class CreateStudentAssignmentDTO {
   private constructor(public studentId: string, public assignmentId: string) {}
-  static fromRequest(req: Request): CreateStudentAssignmentDTO | undefined {
+  static fromRequest(req: Request): CreateStudentAssignmentDTO {
     if (isMissingKeys(req.body, ["studentId", "assignmentId"])) {
-      return undefined;
+      throw new DTOMissingKeysException(["studentId", "assignmentId"]);
     }
 
     return new CreateStudentAssignmentDTO(
@@ -17,9 +22,9 @@ export class CreateStudentAssignmentDTO {
 
 export class SubmitStudentAssignmentDTO {
   private constructor(public id: string) {}
-  static fromRequest(req: Request): SubmitStudentAssignmentDTO | undefined {
+  static fromRequest(req: Request): SubmitStudentAssignmentDTO {
     if (isMissingKeys(req.body, ["id"])) {
-      return undefined;
+      throw new MalformedUUIDException();
     }
 
     return new SubmitStudentAssignmentDTO(req.body.id);
@@ -28,14 +33,14 @@ export class SubmitStudentAssignmentDTO {
 
 export class GradeStudentAssignmentDTO {
   private constructor(public id: string, public grade: string) {}
-  static fromRequest(req: Request): GradeStudentAssignmentDTO | undefined {
+  static fromRequest(req: Request): GradeStudentAssignmentDTO {
     if (isMissingKeys(req.body, ["id", "grade"])) {
-      return undefined;
+      throw new DTOMissingKeysException(["id", "grade"]);
     }
 
     const { grade } = req.body;
     if (!["A", "B", "C", "D"].includes(grade)) {
-      return undefined;
+      throw new DTOIncorredDataInKeysException("grade", "A, B, C, D");
     }
 
     return new GradeStudentAssignmentDTO(req.body.id, req.body.grade);

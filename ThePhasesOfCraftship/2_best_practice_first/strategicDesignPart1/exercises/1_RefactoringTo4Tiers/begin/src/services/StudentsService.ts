@@ -1,4 +1,4 @@
-import { Database } from "../database";
+import { Database } from "../shared/database";
 import { Student, StudentAssignment } from "@prisma/client";
 import {
   CreateStudentDTO,
@@ -6,6 +6,7 @@ import {
   ReadStudentDTO,
   ReadStudentGradesDTO,
 } from "../dtos/students";
+import { StudentNotFoundException } from "../shared/exceptions";
 
 export class StudentsService {
   constructor(private readonly database: Database) {}
@@ -17,9 +18,13 @@ export class StudentsService {
     return student;
   }
 
-  async readStudent(dto: ReadStudentDTO): Promise<Student | null> {
+  async readStudent(dto: ReadStudentDTO): Promise<Student> {
     const { id } = dto;
     const student = await this.database.findStudentById(id);
+    if (!student) {
+      throw new StudentNotFoundException();
+    }
+
     return student;
   }
 
@@ -30,15 +35,12 @@ export class StudentsService {
 
   async readAssignments(
     dto: ReadStudentAssignmentsDTO
-  ): Promise<StudentAssignment[] | undefined | null> {
+  ): Promise<StudentAssignment[]> {
     const { id } = dto;
     const student = await this.database.findStudentById(id);
-    if (!student) {
-      return undefined;
-    }
-
     const studentAssignments =
       await this.database.findStudentAssignmentsByStudent(student);
+
     return studentAssignments;
   }
 
@@ -47,12 +49,9 @@ export class StudentsService {
   ): Promise<StudentAssignment[] | undefined | null> {
     const { id } = dto;
     const student = await this.database.findStudentById(id);
-    if (!student) {
-      return undefined;
-    }
-
     const studentAssignments =
       await this.database.findStudentAssignmentGradesByStudent(student);
+
     return studentAssignments;
   }
 }

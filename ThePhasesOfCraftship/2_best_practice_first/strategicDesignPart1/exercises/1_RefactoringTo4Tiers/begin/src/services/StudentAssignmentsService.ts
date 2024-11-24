@@ -1,5 +1,5 @@
 import { StudentAssignment } from "@prisma/client";
-import { Database } from "../database";
+import { Database } from "../shared/database";
 import {
   CreateStudentAssignmentDTO,
   GradeStudentAssignmentDTO,
@@ -13,19 +13,8 @@ export class StudentAssignmentsService {
     dto: CreateStudentAssignmentDTO
   ): Promise<StudentAssignment | undefined> {
     const { studentId, assignmentId } = dto;
-
     const student = await this.database.findStudentById(studentId);
-    if (!student) {
-      return undefined;
-    }
-
-    // check if assignment exists
     const assignment = await this.database.findAssignmentById(assignmentId);
-
-    if (!assignment) {
-      return undefined;
-    }
-
     const studentAssignment = await this.database.createStudentAssignment(
       student,
       assignment
