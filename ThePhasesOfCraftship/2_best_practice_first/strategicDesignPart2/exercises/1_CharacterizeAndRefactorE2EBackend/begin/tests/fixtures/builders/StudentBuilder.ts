@@ -3,11 +3,7 @@ import { prisma } from "../../../src/database";
 import { faker } from "@faker-js/faker";
 
 export class StudentBuilder {
-  private student: Partial<Student> = {
-    id: faker.number.int().toString(),
-    name: faker.person.fullName(),
-    email: faker.internet.email(),
-  };
+  private student: Partial<Student> = {};
 
   withName(name: string) {
     this.student.name = name;
@@ -20,8 +16,8 @@ export class StudentBuilder {
   }
 
   async build(): Promise<Student> {
-    if (!this.student.name) throw new Error("Name is required");
-    if (!this.student.email) throw new Error("Email is required");
+    if (!this.student.name) this.student.name = faker.person.fullName();
+    if (!this.student.email) this.student.email = faker.internet.email();
 
     const builtStudent = await prisma.student.upsert({
       where: { email: this.student.email },

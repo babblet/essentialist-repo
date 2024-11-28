@@ -5,3 +5,11 @@ Feature: Enroll Student In Class
     And there is a class
     When the student enrolls in the class
     Then the student is enrolled in the class
+
+  Scenario: Fail to enroll student in class with an already enrolled student
+    Given there is a student
+    And there is a class
+    And the student is already enrolled in the class
+    When the student enrolls in the class
+    Then the enrollment should fail
+    And the student should still be enrolled in the class

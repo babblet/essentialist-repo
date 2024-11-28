@@ -3,27 +3,23 @@ import { Class } from "@prisma/client";
 import { prisma } from "../../../src/database";
 
 export class ClassBuilder {
-  private name: string = faker.person.fullName();
+  private class: Partial<Class> = {};
 
   withName(name: string) {
-    this.name = name;
+    this.class.name = name;
     return this;
   }
 
   async build(): Promise<Class> {
-    if (!this.name) throw new Error("Name is required");
+    this.class.id = faker.string.uuid();
+    if (!this.class.name) this.class.name = faker.person.fullName();
 
-    const builtClass: Class = {
-      id: faker.number.int().toString(),
-      name: this.name,
-    };
-
-    const classData = await prisma.class.upsert({
-      where: { id: builtClass.id },
-      update: builtClass,
-      create: builtClass,
+    const builtClass = await prisma.class.upsert({
+      where: { id: this.class.id },
+      update: this.class,
+      create: this.class as Class,
     });
 
-    return classData;
+    return builtClass;
   }
 }
