@@ -1,5 +1,4 @@
-import { prisma } from "../../end/src/database";
-
+import { prisma } from "../src/database";
 
 async function seed() {
   const students = await Promise.all(
@@ -10,7 +9,7 @@ async function seed() {
           email: `student${i + 1}@essentialist.com`,
         },
       });
-    }),
+    })
   );
 
   const classes = await Promise.all(
@@ -20,7 +19,7 @@ async function seed() {
           name: `Class ${i + 1}`,
         },
       });
-    }),
+    })
   );
 
   const assignments = await Promise.all(
@@ -31,10 +30,9 @@ async function seed() {
           title: `Assignment ${i + 1}`,
         },
       });
-    }),
+    })
   );
 
-  
   // Enroll students in classes and create student assignments with grades
   for (let i = 0; i < students.length; i++) {
     for (let j = 0; j < classes.length; j++) {
