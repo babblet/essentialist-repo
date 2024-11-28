@@ -3,7 +3,7 @@ import { Class } from "@prisma/client";
 import { prisma } from "../../../src/database";
 
 export class ClassBuilder {
-  private name?: string;
+  private name: string = faker.person.fullName();
 
   withName(name: string) {
     this.name = name;
