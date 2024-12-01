@@ -11,6 +11,7 @@ export class StudentAssignmentBuilder {
     this.studentAssignment.assignmentId = assignment.id;
     return this;
   }
+
   withStudent(student: Student) {
     this.studentAssignment.studentId = student.id;
     return this;

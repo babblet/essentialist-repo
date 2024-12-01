@@ -2,6 +2,7 @@ import { AssignmentBuilder } from "./builders/AssignmentBuilder";
 import { AssignmentSubmissionBuilder } from "./builders/AssignmentSubmissionBuilder";
 import { ClassBuilder } from "./builders/ClassBuilder";
 import { ClassEnrollmentBuilder } from "./builders/ClassEnrollmentBuilder";
+import { GradedAssignmentBuilder } from "./builders/GradedAssignmentBuilder";
 import { StudentAssignmentBuilder } from "./builders/StudentAssignmentBuilder";
 import { StudentBuilder } from "./builders/StudentBuilder";
 
@@ -27,4 +28,8 @@ export const creatingAStudentAssignment = () => {
 
 export const creatingAnAssignmentSubmission = () => {
   return new AssignmentSubmissionBuilder();
+};
+
+export const creatingAGradedAssignment = () => {
+  return new GradedAssignmentBuilder();
 };

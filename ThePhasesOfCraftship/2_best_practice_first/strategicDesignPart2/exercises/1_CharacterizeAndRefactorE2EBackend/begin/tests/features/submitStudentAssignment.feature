@@ -22,3 +22,13 @@ Feature: Submit student assignment
     And the student submits the assignment
     When the student submits the assignment again
     Then the assignment submission fails
+
+  Scenario: Fail to submit assignment when students assignment does not exist
+    Given there is a student
+    And there is a class
+    And there is an assignment
+    And the student is enrolled in the class
+    When the student submits the assignment
+    Then the assignment submission fails
+
+

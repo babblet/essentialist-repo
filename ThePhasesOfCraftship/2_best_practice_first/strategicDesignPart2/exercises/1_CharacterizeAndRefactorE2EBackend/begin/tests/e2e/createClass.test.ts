@@ -15,7 +15,7 @@ const feature = loadFeature(
 );
 
 beforeAll(async () => {
-  resetDatabase();
+  await resetDatabase();
 });
 
 defineFeature(feature, (test) => {

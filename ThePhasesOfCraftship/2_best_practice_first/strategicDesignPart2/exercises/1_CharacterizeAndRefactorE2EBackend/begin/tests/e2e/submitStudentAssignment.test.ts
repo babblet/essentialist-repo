@@ -19,6 +19,7 @@ import {
   creatingAStudent,
   creatingAStudentAssignment,
 } from "../fixtures";
+import e from "express";
 
 const feature = loadFeature(
   path.join(__dirname, "../features/submitStudentAssignment.feature")
@@ -121,8 +122,61 @@ defineFeature(feature, (test) => {
         .build();
     });
 
-    when("the student submits the assignment again", () => {});
+    when("the student submits the assignment again", async () => {
+      response = await request(app).post("/student-assignments/submit").send({
+        studentId: existingStudent.id,
+        assignmentId: existingAssignment.id,
+      });
+    });
 
-    then("the assignment submission fails", () => {});
+    then("the assignment submission fails", () => {
+      expect(response.status).toBe(409);
+    });
+  });
+
+  test("Fail to submit assignment when students assignment does not exist", ({
+    given,
+    and,
+    when,
+    then,
+  }) => {
+    let existingStudent: Student;
+    let existingClass: Class;
+    let existingAssignment: Assignment;
+    let existingClassEnrollment: ClassEnrollment;
+    let response: any;
+
+    given("there is a student", async () => {
+      existingStudent = await creatingAStudent().build();
+    });
+
+    and("there is a class", async () => {
+      existingClass = await creatingAClass().build();
+    });
+
+    and("there is an assignment", async () => {
+      existingAssignment = await creatingAnAssignment()
+        .withClass(existingClass)
+        .build();
+    });
+
+    and("the student is enrolled in the class", async () => {
+      existingClassEnrollment = await creatingAClassEnrollment()
+        .withClass(existingClass)
+        .withStudent(existingStudent)
+        .build();
+    });
+
+    when("the student submits the assignment", async () => {
+      response = await request(app).post("/student-assignments/submit").send({
+        studentId: existingStudent.id,
+        assignmentId: existingAssignment.id,
+      });
+    });
+
+    then("the assignment submission fails", () => {
+      expect(response.status).toBe(404);
+      expect(response.body.error).toBeDefined();
+    });
   });
 });

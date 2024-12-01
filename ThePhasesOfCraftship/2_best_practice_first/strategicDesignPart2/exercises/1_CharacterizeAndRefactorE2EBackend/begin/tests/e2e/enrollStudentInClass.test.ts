@@ -47,6 +47,27 @@ defineFeature(feature, (test) => {
     });
   });
 
+  test("Fail to enroll non existent student", ({ given, when, then }) => {
+    let existingClass: Class;
+    let response: any;
+
+    given("there is a class", async () => {
+      existingClass = await creatingAClass().build();
+    });
+
+    when("a non existent student enrolls in the class", async () => {
+      response = await request(app).post(`/class-enrollments`).send({
+        studentId: "non-existent",
+        classId: existingClass.id,
+      });
+    });
+
+    then("the enrollment should fail", () => {
+      expect(response.status).toBe(404);
+      expect(response.body.error).toBe("StudentNotFound");
+    });
+  });
+
   test("Fail to enroll student in class with an already enrolled student", ({
     given,
     and,
